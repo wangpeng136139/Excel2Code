@@ -1,7 +1,6 @@
 from typing import List
 from ExcelRow import ExcelRow, ExcelRowTitle, ExcelRowType, ExcelRowMark
 import xlrd
-import xlwt
 
 
 # 第一行变量名 加#代表不写入，第一列一定是ID
@@ -10,22 +9,36 @@ import xlwt
 # 第三行是类型，int string bool enum等，大小写无所谓
 # 第四行是具体数据的开始
 class ExcelSheel:
-    m_listrow: List = []
-    m_name: str = ""
-    m_rowTitle: ExcelRowTitle = ""
-    m_rowMark: ExcelRowMark = ""
-    m_rowType: ExcelRowType = ""
+    __listrow: List = []
+    __name: str = ""
+    __rowTitle: ExcelRowTitle = ""
+    __rowMark: ExcelRowMark = ""
+    __rowType: ExcelRowType = ""
+    __rowCount: int = 0
+    __colcount: int = 0
 
     def __init__(self, sheet) -> None:
-        self.m_name = sheet.name
-        self.m_rowTitle = ExcelRowTitle(sheet.row_values(0))
-        self.m_rowMark = ExcelRowMark(sheet.row_values(1))
-        self.m_rowType = ExcelRowType(sheet.row_values(2))
+        self.__name = sheet.name
+        self.__rowTitle = ExcelRowTitle(sheet.row_values(0))
+        self.__rowMark = ExcelRowMark(sheet.row_values(1))
+        self.__rowType = ExcelRowType(sheet.row_values(2))
         
-        rowcount = sheet.nrows
-        colcount = sheet.ncols
-        for i in range(3, rowcount):
+        self.__rowcount = sheet.nrows
+        self.__colcount = sheet.ncols
+        for i in range(3, self.__rowcount):
             row = sheet.row_values(i)
-            item = ExcelRow(row, self.m_rowTitle, self.m_rowType, self.m_rowMark, colcount)
-            self.m_listrow.append(item)
+            item = ExcelRow(row, self.__rowTitle, self.__rowType, self.__rowMark, self.__colcount)
+            self.__listrow.append(item)
+
+    def GetRowCountself(self) -> int:
+        return self.__rowcount
+
+    def GetBinList(self) -> List:
+        binList: List = []
+        list = self.__listrow
+        for row in list:
+            binList.extend(row.GetCellBinList())
+        return binList
+            
+
 

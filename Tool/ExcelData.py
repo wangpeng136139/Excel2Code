@@ -28,6 +28,7 @@
 # p	char[]	string	 	 
 # P	void *	integer	 	(5), (3)
 import struct
+import EnumUtils
 
 
 class ExcelData:
@@ -43,6 +44,8 @@ class ExcelData:
     m_bMainKey: bool = False
     # 是否为第二主键
     m_bSecondKey: bool = False
+    # 所有枚举
+    m_enum: str = ""
 
     def __init__(self, value, type, valueName, mark) -> None:
         self.m_value = value
@@ -64,8 +67,17 @@ class ExcelData:
             value = int(value)
         elif type == "bool":
             value = bool(value)
+        elif type == "short":
+            value = int(value)
         elif type == "float":
             value = float(value)
+        elif type == "enum":
+            list = value.split(".")
+            if len(list) < 2:
+                print("value is error:" + value)
+                exit()
+            value = EnumUtils.GetIndex(list[0], [1])
+            value = int(value)
         self.m_value = value
         
     def IsMainKey(self):
@@ -77,17 +89,44 @@ class ExcelData:
     def GetBytes(self):
         value = self.m_value
         binValue = ""
+        type = self.m_type
         if type == "int":
             binValue = struct.pack("i", value)
         elif type == "bool":
             binValue = struct.pack("?", value)
         elif type == "float":
             binValue = struct.pack("f", value)
+        elif type == "enum":
+            binValue = struct.pack("i", value)
+        elif type == "short":
+            binValue = struct.pack("h", value)
         else: 
             binValue = struct.pack("s", value)
         return binValue
 
     def GetValue(self):
         return self.m_value
-        
-    
+
+    def GetCSClassValue(self):
+        return "private "+self.m_type+" m_" + self.m_valueName + ";"
+
+    def GetCSGetValue(self):
+        return "public "+self.m_type+" " + self.m_valueName + " => " + " m_" + self.m_valueName + ";"
+
+    def GetCSReadValue(self):
+        content: str = ""
+        type = self.m_type
+        if type == "int":
+            content = "pStream.ReadInt32();"
+        elif type == "bool":
+            content = "pStream.ReadBoolean();"
+        elif type == "float":
+            content = "pStream.ReadSingle();"
+        elif type == "short":
+            content = "pStream.ReadInt16();"
+        elif type == "enum":
+            content = "(" + self.m_enum + ")pStream.ReadInt32();"
+        else: 
+            print("type is error:" + type)
+            exit()
+        return " m_" + self.m_valueName + " = " + content

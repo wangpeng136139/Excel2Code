@@ -1,7 +1,6 @@
-from _typeshed import Self
 import os
 from typing import List
-
+import struct
 # x	pad byte	no value	 	 
 # c	char	string of length 1	1	 
 # b	signed char	integer	1	(3)
@@ -30,8 +29,15 @@ class BinWrite:
     def StartWrite(self):
         return
 
-    def Write(self, value):
+    def WriteBin(self, value) -> None:
         self.m_listContent.append(value)
+
+    def WriteList(self, value: List) -> None:
+        self.m_listContent.extend(value)
+
+    def WriteInt(self, value: int) -> None:
+        binValue = struct.pack("i", value)
+        self.WriteBin(binValue)     
 
     def EndWrite(self):
         with open('file/pythonCopy.docx', 'wb') as wb:

@@ -1,7 +1,7 @@
 from typing import List
 from ExcelData import ExcelData
 import xlrd
-import xlwt
+
 
 class ExcelRowParent:
     datalist: List = []
@@ -32,7 +32,7 @@ class ExcelRowMark(ExcelRowParent):
 
 
 class ExcelRow:
-    datalist: List = []
+    __datalist: List = []
 
     def __init__(self, row, title, type, mark, colCount) -> None:
         rowCount = len(row)
@@ -50,4 +50,10 @@ class ExcelRow:
             typeValue = type.GetValue(i).lower()
             markValue = mark.GetValue(i)
             item = ExcelData(cell, titleValue, typeValue, markValue)
-            self.datalist.append(item)
+            self.__datalist.append(item)
+        
+        def GetCellBinList(self) -> list:
+            cellList = []
+            for cell in self.__datalist:
+                cellList.append(cell.GetBytes())
+            return cellList
