@@ -36,6 +36,9 @@ class ExcelSheel:
     def GetRowCountself(self) -> int:
         return self.__rowcount
 
+    def GetMainKey(self) -> List:
+        mainKeyList: List = []
+
     def GetBinList(self) -> List:
         binList: List = []
         list = self.__listrow

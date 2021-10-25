@@ -1,4 +1,5 @@
 from typing import List
+import Derictory
 import os
 
 
@@ -38,6 +39,7 @@ class Content:
         self.listContent = {}
     
     def WriteFile(self, path: str) -> None:
+        Derictory.CreateDir(os.path.dirname(path))
         with open(path, "w") as f:
             content: str = ""
             for item in self.listContent:

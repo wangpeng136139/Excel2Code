@@ -1,4 +1,3 @@
-
 # Type symbol	Type number	Python value
 # XL_CELL_EMPTY	0	empty string ''
 # XL_CELL_TEXT	1	a Unicode string
@@ -56,38 +55,38 @@ class ExcelData:
         secondIndex = valueName.find("(Second)")
         if mainIndex > -1:
             self.m_bMainKey = True
+            valueName = valueName.replace("(Main)", "")
         if secondIndex > -1:
-            self.m_bSecondKey = True
+            self.m_bSecondKey = True    
+            valueName = valueName.replace("(Second)", "")
         self.TypeToValue()
 
-
-    def StrToInt(self, strValue):    
-        value = 0
+    def StrToInt(self, strValue: str):    
         if len(strValue) < 1:
-            return value
+            return 0
+        index = strValue.find(".") 
+        if index > -1:
+           strValue = strValue[0:index]
+
+        if len(strValue) < 1:
+            return 0
         
-        if strValue.find(".") > -1:
-            
+        return int(strValue)
 
     def TypeToValue(self):
         value = str(self.m_value)
         type = self.m_type
         if type == "int":
-            if len(value) < 1:
-                value = 0
-            else:
-                if value.find(".") > 0:
-                value = int(value)
+           value = self.StrToInt(value)
         elif type == "bool":
             if len(value) < 1:
                 value = False
             else:
                 value = bool(value)
+        elif type == "long":
+            value = long(value)
         elif type == "short":
-            if len(value) < 1:
-                value = 0
-            else:
-                value = int(value)
+            value = self.StrToInt(value)
         elif type == "float":
             if len(value) < 1:
                 value = 0
@@ -122,8 +121,8 @@ class ExcelData:
             binValue = struct.pack("i", value)
         elif type == "short":
             binValue = struct.pack("h", value)
-        else: 
-            binValue = struct.pack("s", value)
+        else:
+            binValue = struct.pack("%ds"%len(value), value)
         return binValue
 
     def GetValue(self):

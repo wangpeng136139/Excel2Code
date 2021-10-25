@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 from ExcelData import ExcelData
 import xlrd
 
@@ -11,39 +11,45 @@ class ExcelRowParent:
 
 
 class ExcelRowTitle:
-    datalist: List = []
+    __datalist: List = []
 
     def GetValue(self, index):
-        return self.datalist[index].GetValue()
+        return self.__datalist[index].GetValue()
 
     def __init__(self, row) -> None:
         for cell in row:
            item = ExcelData(cell, "", "", "")
-           self.datalist.append(item)
+           self.__datalist.append(item)
+
+    def GetMainKey(self) -> List:
+        mainKeyList: List = []
+        for item in self.__datalist:
+            item.get
+        
 
         
 class ExcelRowType:
-    datalist: List = []
+    __datalist: List = []
 
     def GetValue(self, index):
-        return self.datalist[index].GetValue()
+        return self.__datalist[index].GetValue()
         
     def __init__(self, row) -> None:
         for cell in row:
            item = ExcelData(cell, "", "", "")
-           self.datalist.append(item)
+           self.__datalist.append(item)
 
 
-class ExcelRowMark(ExcelRowParent):
-    datalist: List = []
+class ExcelRowMark:
+    __datalist: List = []
 
     def GetValue(self, index):
-        return self.datalist[index].GetValue()
+        return self.__datalist[index].GetValue()
         
     def __init__(self, row) -> None:
         for cell in row:
            item = ExcelData(cell, "", "", "")
-           self.datalist.append(item)
+           self.__datalist.append(item)
 
 
 class ExcelRow:
