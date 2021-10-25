@@ -24,11 +24,11 @@ class ExcelWork:
         for sheet in workSheets:
             excelSheet = ExcelSheel(sheet)
             self.__sheetList.append(excelSheet)
-            self.__sheetDic[excelSheet.__name] = excelSheet
+            self.__sheetDic[excelSheet.GetName()] = excelSheet
 
     def ExportBin(self, path: str):
-        path = os.path.commonpath(path, self.__workName + ".bin")
-        rowCount = self.GetRowCount(self)   
+        path = os.path.join(path, self.__workName + ".bin")
+        rowCount = self.GetRowCount()   
         binWrite = BinWrite(path)
         binWrite.WriteInt(rowCount)
         for sheet in self.__sheetList:

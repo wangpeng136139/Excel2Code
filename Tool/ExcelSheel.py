@@ -30,6 +30,9 @@ class ExcelSheel:
             item = ExcelRow(row, self.__rowTitle, self.__rowType, self.__rowMark, self.__colcount)
             self.__listrow.append(item)
 
+    def GetName(self) -> str:
+        return self.__name
+
     def GetRowCountself(self) -> int:
         return self.__rowcount
 

@@ -47,7 +47,7 @@ class ExcelData:
     # 所有枚举
     m_enum: str = ""
 
-    def __init__(self, value, type, valueName, mark) -> None:
+    def __init__(self, value, valueName, type, mark) -> None:
         self.m_value = value
         self.m_type = type
         self.m_valueName = valueName
@@ -59,18 +59,40 @@ class ExcelData:
         if secondIndex > -1:
             self.m_bSecondKey = True
         self.TypeToValue()
+
+
+    def StrToInt(self, strValue):    
+        value = 0
+        if len(strValue) < 1:
+            return value
         
+        if strValue.find(".") > -1:
+            
+
     def TypeToValue(self):
-        value = self.m_value
+        value = str(self.m_value)
         type = self.m_type
         if type == "int":
-            value = int(value)
+            if len(value) < 1:
+                value = 0
+            else:
+                if value.find(".") > 0:
+                value = int(value)
         elif type == "bool":
-            value = bool(value)
+            if len(value) < 1:
+                value = False
+            else:
+                value = bool(value)
         elif type == "short":
-            value = int(value)
+            if len(value) < 1:
+                value = 0
+            else:
+                value = int(value)
         elif type == "float":
-            value = float(value)
+            if len(value) < 1:
+                value = 0
+            else:
+                value = float(value)
         elif type == "enum":
             list = value.split(".")
             if len(list) < 2:

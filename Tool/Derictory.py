@@ -29,4 +29,5 @@ def GetDirFile(path, list_name: List) -> None:  #传入存储的list
         if os.path.isdir(file_path):
             GetDirFile(file_path, list_name)
         else:
+            file_path = file_path.replace("\\","/")
             list_name.append(file_path)

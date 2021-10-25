@@ -10,14 +10,24 @@ class ExcelRowParent:
         return self.datalist[index].GetValue()
 
 
-class ExcelRowTitle(ExcelRowParent):
+class ExcelRowTitle:
+    datalist: List = []
+
+    def GetValue(self, index):
+        return self.datalist[index].GetValue()
+
     def __init__(self, row) -> None:
         for cell in row:
            item = ExcelData(cell, "", "", "")
            self.datalist.append(item)
 
         
-class ExcelRowType(ExcelRowParent):
+class ExcelRowType:
+    datalist: List = []
+
+    def GetValue(self, index):
+        return self.datalist[index].GetValue()
+        
     def __init__(self, row) -> None:
         for cell in row:
            item = ExcelData(cell, "", "", "")
@@ -25,6 +35,11 @@ class ExcelRowType(ExcelRowParent):
 
 
 class ExcelRowMark(ExcelRowParent):
+    datalist: List = []
+
+    def GetValue(self, index):
+        return self.datalist[index].GetValue()
+        
     def __init__(self, row) -> None:
         for cell in row:
            item = ExcelData(cell, "", "", "")
@@ -52,8 +67,8 @@ class ExcelRow:
             item = ExcelData(cell, titleValue, typeValue, markValue)
             self.__datalist.append(item)
         
-        def GetCellBinList(self) -> list:
-            cellList = []
-            for cell in self.__datalist:
-                cellList.append(cell.GetBytes())
-            return cellList
+    def GetCellBinList(self) -> list:
+        cellList = []
+        for cell in self.__datalist:
+            cellList.append(cell.GetBytes())
+        return cellList
