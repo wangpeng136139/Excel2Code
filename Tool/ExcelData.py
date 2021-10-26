@@ -125,6 +125,9 @@ class ExcelData:
             binValue = struct.pack("%ds"%len(value), value)
         return binValue
 
+    def GetCSType(self):
+        return ""
+
     def GetValue(self):
         return self.m_value
 

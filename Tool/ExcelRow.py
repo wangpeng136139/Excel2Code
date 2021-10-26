@@ -24,7 +24,17 @@ class ExcelRowTitle:
     def GetMainKey(self) -> List:
         mainKeyList: List = []
         for item in self.__datalist:
-            item.get
+            if item.IsMainKey() == True:
+                mainKeyList.append(item)
+
+        for item in self.__datalist:
+            if item.IsSecondKey() == True:
+                mainKeyList.append(item)
+
+        if len(mainKeyList) < 1:
+            mainKeyList.append(item)
+        
+        return mainKeyList
         
 
         

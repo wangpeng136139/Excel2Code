@@ -1,6 +1,7 @@
 from typing import Dict
 from typing import List
 from Content import Content
+from ExcelData import ExcelData
 from ExcelSheel import ExcelSheel
 from BinWrite import BinWrite
 import xlrd
@@ -42,21 +43,32 @@ class ExcelWork:
             count = count + sheet.GetRowCountself()
         return count
 
+    def GetKeyList(self) -> List:
+        return self.__sheetList[0].GetMainKey()
+
     def ExportCS(self, path: str):
         path = os.path.join(path, self.__workName + ".cs")
         content = Content()
         
+        workName = self.__workName
+        listKey = self.GetKeyList()
+
+        MainData:ExcelData = listKey[0]
+        SecondData:ExcelData = None
+        if listKey.count > 1:
+            SecondData = listKey[1]
+
         content.WriteLine("using UnityEngine;")
         content.WriteLine("using System.Collections.Generic;")
         content.WriteLine("using System.IO;")
         content.WriteLine("using System;")
         content.WriteLine("namespace Config")
         content.StartBlock()
-        content.WriteLine("public class Templet : DataBase") 
+        content.WriteLine("public class "+workName+" : DataBase") 
         content.StartBlock()
         content.WriteLine("#region load and get funtion")
-        content.WriteLine("private static Dictionary<TemKey, Templet> m_DicDatas = null;")
-        content.WriteLine("public static Dictionary<TemKey, Templet> DicDatas")
+        content.WriteLine("private static Dictionary<"+MainData.GetCSType() + "," + workName +"> m_DicDatas = null;")
+        content.WriteLine("public static Dictionary<"+MainData.GetCSType() + ", "+workName+"> DicDatas")
         content.StartBlock()
         content.WriteLine("get")
         content.StartBlock()
@@ -64,8 +76,8 @@ class ExcelWork:
         content.WriteLine("return m_DicDatas;")
         content.EndBlock()
         content.EndBlock()
-        content.WriteLine("private static List<Templet> m_Datas = null;")
-        content.WriteLine("public static List<Templet> Datas")
+        content.WriteLine("private static List<"+workName+"> m_Datas = null;")
+        content.WriteLine("public static List<"+workName+"> Datas")
         content.StartBlock()
         content.WriteLine("get")
         content.StartBlock()
@@ -85,20 +97,20 @@ class ExcelWork:
         content.StartBlock()
         content.WriteLine("if (m_DicDatas == null || m_Datas == null)")
         content.StartBlock()
-        content.WriteLine("Stream fs = OpenData(\"Templet.bin\");")
+        content.WriteLine("Stream fs = OpenData(\""+workName+".bin\");")
         content.WriteLine("if (fs != null)")
         content.StartBlock()
         content.WriteLine("BinaryReader br = new BinaryReader(fs);")
         content.WriteLine("ushort dataNum = br.ReadUInt16();")
-        content.WriteLine("m_DicDatas = new Dictionary<TemKey, Templet>(dataNum + 1);")
-        content.WriteLine("m_Datas = new List<Templet>(dataNum + 1);")
+        content.WriteLine("m_DicDatas = new Dictionary<"+MainData.GetCSType() + ", "+workName+">(dataNum + 1);")
+        content.WriteLine("m_Datas = new List<"+workName+">(dataNum + 1);")
         content.WriteLine("for (int i = 0; i < dataNum; ++i)")
         content.StartBlock()
-        content.WriteLine("Templet data = new Templet();")
+        content.WriteLine(""+workName+" data = new "+workName+"();")
         content.WriteLine("data.Load(br);")
         content.WriteLine("if (m_DicDatas.ContainsKey(data.MainKey))")
         content.StartBlock()
-        content.WriteLine("Debug.LogError(\"fuck you mate, ID:\" + data.ID + \" already exists in Templet!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\");")
+        content.WriteLine("Debug.LogError(\"fuck you mate, ID:\" + data.ID + \" already exists in "+workName+"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\");")
         content.WriteLine("continue;")
         content.EndBlock()
         content.WriteLine("m_DicDatas.Add(data.MainKey, data);")
@@ -111,10 +123,10 @@ class ExcelWork:
         content.EndBlock()
         content.EndBlock()
         content.EndBlock()
-        content.WriteLine("public static Templet Get(TemKey MainKey)")
+        content.WriteLine("public static "+workName+" Get("+MainData.GetCSType() + " MainKey)")
         content.StartBlock()
         content.WriteLine("Load();")
-        content.WriteLine("Templet data = null;")
+        content.WriteLine(""+workName+" data = null;")
         content.WriteLine("if(m_DicDatas.TryGetValue(MainKey, out data))")
         content.StartBlock()
         content.WriteLine("return data;")
