@@ -1,12 +1,13 @@
 from typing import Dict
 from typing import List
 from Content import Content
-from ExcelData import ExcelData
+import ExcelData
 from ExcelSheel import ExcelSheel
 from BinWrite import BinWrite
 import xlrd
 import ExcelUtils
 import os
+import Derictory
 
 
 class ExcelWork:
@@ -29,13 +30,17 @@ class ExcelWork:
             self.__sheetDic[excelSheet.GetName()] = excelSheet
 
     def ExportBin(self, path: str):
+        Derictory.CreateDir(path)
+
         path = os.path.join(path, self.__workName + ".bin")
+        path = path.replace("\\", "/")
         rowCount = self.GetRowCount()   
         binWrite = BinWrite(path)
         binWrite.WriteInt(rowCount)
         for sheet in self.__sheetList:
             list = sheet.GetBinList()
-            binWrite.WriteBin(list)
+            binWrite.WriteList(list)
+        binWrite.EndWrite()
 
     def GetRowCount(self) -> int:
         count = 0
@@ -46,6 +51,15 @@ class ExcelWork:
     def GetKeyList(self) -> List:
         return self.__sheetList[0].GetMainKey()
 
+    def GetCSReadValueList(self) -> List:
+        return self.__sheetList[0].GetCSReadValueList()
+
+    def GetCSGetValueList(self) -> List:
+        return self.__sheetList[0].GetCSGetValueList()
+
+    def GetCSClassValue(self) -> List:
+        return self.__sheetList[0].GetCSClassValue()
+
     def ExportCS(self, path: str):
         path = os.path.join(path, self.__workName + ".cs")
         content = Content()
@@ -55,7 +69,8 @@ class ExcelWork:
 
         MainData:ExcelData = listKey[0]
         SecondData:ExcelData = None
-        if listKey.count > 1:
+        listKeyCount = len(listKey)
+        if listKeyCount > 1:
             SecondData = listKey[1]
 
         content.WriteLine("using UnityEngine;")
@@ -66,6 +81,16 @@ class ExcelWork:
         content.StartBlock()
         content.WriteLine("public class "+workName+" : DataBase") 
         content.StartBlock()
+        content.WriteLine("#region value")
+        valueList = self.GetCSClassValue()
+        valueGetList = self.GetCSGetValueList()
+        for i in range(len(valueList)):
+            value = valueList[i]
+            valueGet = valueGetList[i]
+            content.WriteLine(value)
+            content.WriteLine(valueGet)
+
+        content.WriteLine("#endregion")
         content.WriteLine("#region load and get funtion")
         content.WriteLine("private static Dictionary<"+MainData.GetCSType() + "," + workName +"> m_DicDatas = null;")
         content.WriteLine("public static Dictionary<"+MainData.GetCSType() + ", "+workName+"> DicDatas")
@@ -101,19 +126,19 @@ class ExcelWork:
         content.WriteLine("if (fs != null)")
         content.StartBlock()
         content.WriteLine("BinaryReader br = new BinaryReader(fs);")
-        content.WriteLine("ushort dataNum = br.ReadUInt16();")
+        content.WriteLine("int dataNum = br.ReadInt32();")
         content.WriteLine("m_DicDatas = new Dictionary<"+MainData.GetCSType() + ", "+workName+">(dataNum + 1);")
         content.WriteLine("m_Datas = new List<"+workName+">(dataNum + 1);")
         content.WriteLine("for (int i = 0; i < dataNum; ++i)")
         content.StartBlock()
         content.WriteLine(""+workName+" data = new "+workName+"();")
         content.WriteLine("data.Load(br);")
-        content.WriteLine("if (m_DicDatas.ContainsKey(data.MainKey))")
+        content.WriteLine("if (m_DicDatas.ContainsKey(data." + MainData.GetValueName() + "))")
         content.StartBlock()
         content.WriteLine("Debug.LogError(\"fuck you mate, ID:\" + data.ID + \" already exists in "+workName+"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\");")
         content.WriteLine("continue;")
         content.EndBlock()
-        content.WriteLine("m_DicDatas.Add(data.MainKey, data);")
+        content.WriteLine("m_DicDatas.Add(data." + MainData.GetValueName() + ", data);")
         content.WriteLine("m_Datas.Add(data);")
         content.EndBlock()
         content.WriteLine("br.Close();")
@@ -158,11 +183,17 @@ class ExcelWork:
         content.WriteLine("System.GC.Collect();")
         content.EndBlock()
         content.EndBlock()
+        content.WriteLine("public void Load(BinaryReader pStream)")
+        content.StartBlock()
+        valueReadList = self.GetCSReadValueList()
+        for value in valueReadList:
+            content.WriteLine(value)
+        content.EndBlock()
         content.WriteLine("#endregion")
 
-        ReadContent
         content.EndBlock()
         content.EndBlock()
+        content.WriteFile(path)
 
         
         

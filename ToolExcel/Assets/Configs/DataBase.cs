@@ -13,7 +13,7 @@ namespace Config
 	public class DataBase
 	{
 		#if UNITY_EDITOR || UNITY_STANDALONE_WIN 
-		private static string DefaultFolder = Path.Combine(Application.streamingAssetsPath,"Bin");
+		private static string DefaultFolder = Path.Combine(Application.streamingAssetsPath,"Bin/");
 		#elif  UNITY_IOS || UNITY_ANDROID
 		private static string DefaultFolder = Path.Combine(Application.persistentDataPath,"Bin/");
 		#endif
@@ -21,9 +21,9 @@ namespace Config
 		{
 			var filePath = DefaultFolder + fileName;
 			#if UNITY_EDITOR || UNITY_STANDALONE_WIN || UNITY_IOS
-			filePath = filePath.Replace(file://, );
+			filePath = filePath.Replace("file://", "");
 			#elif UNITY_ANDROID
-			filePath = filePath.Replace(file:///, );
+			filePath = filePath.Replace("file://", "");
 			#endif
 			return OpenFileStream(filePath);
 		}
@@ -52,7 +52,7 @@ namespace Config
 		public virtual void Load(BinaryReader pStream) { }
 		public static void ReadIntList(BinaryReader pStream, ref List<int> intList)
 		{
-			int num = pStream.ReadInt16();
+			int num = pStream.ReadInt32();
 			for (int i = 0; i < num; i++)
 			{
 				if (intList == null)
@@ -231,6 +231,19 @@ namespace Config
 			Vec3Vect.x = pStream.ReadInt32();
 			Vec3Vect.y = pStream.ReadInt32();
 			Vec3Vect.z = pStream.ReadInt32();
+		}
+		public static string ReadUTF8String(BinaryReader pStream)
+		{
+			int num = pStream.ReadInt16();
+			if (num < 1)
+			{
+				return string.Empty;
+			}
+			else
+			{
+				byte[] byteArray = pStream.ReadBytes(num);
+				return System.Text.Encoding.UTF8.GetString(byteArray);
+			}
 		}
 	}
 }

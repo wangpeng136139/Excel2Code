@@ -1,9 +1,23 @@
 import os
 from typing import List
 
+import os
+
+
+def DeleteDirFile(path):
+    folder = ExistsDir(path)
+    if not folder:
+        return
+    ls = os.listdir(path)
+    for i in ls:
+        c_path = os.path.join(path, i)
+        if os.path.isdir(c_path):
+            DeleteDirFile(c_path)
+        else:
+            os.remove(c_path)
 
 def CreateDir(path: str) -> None:
-    folder = os.path.exists(path)
+    folder = ExistsDir(path)
     if not folder:
         os.mkdir(path)
 

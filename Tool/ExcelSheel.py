@@ -19,10 +19,11 @@ class ExcelSheel:
 
     def __init__(self, sheet) -> None:
         self.__name = sheet.name
-        self.__rowTitle = ExcelRowTitle(sheet.row_values(0))
+     
         self.__rowMark = ExcelRowMark(sheet.row_values(1))
         self.__rowType = ExcelRowType(sheet.row_values(2))
-        
+        self.__rowTitle = ExcelRowTitle(sheet.row_values(0), self.__rowType)
+
         self.__rowcount = sheet.nrows
         self.__colcount = sheet.ncols
         for i in range(3, self.__rowcount):
@@ -36,14 +37,25 @@ class ExcelSheel:
     def GetRowCountself(self) -> int:
         return self.__rowcount
 
+    def GetCSReadValueList(self) -> List:
+        return self.__rowTitle.GetCSReadValueList()
+
+    def GetCSGetValueList(self) -> List:
+        return self.__rowTitle.GetCSGetValueList()
+
+    def GetCSClassValue(self) -> List:
+        return self.__rowTitle.GetCSClassValue()
+
     def GetMainKey(self) -> List:
         return self.__rowTitle.GetMainKey()
 
     def GetBinList(self) -> List:
         binList: List = []
         list = self.__listrow
-        for row in list:
-            binList.extend(row.GetCellBinList())
+        for index in range(len(list)):
+            row = list[index]
+            for colIndex in range(self.__colcount):
+                binList.append(row.GetCellBin(colIndex))
         return binList
             
 

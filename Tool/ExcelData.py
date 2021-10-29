@@ -61,6 +61,9 @@ class ExcelData:
             valueName = valueName.replace("(Second)", "")
         self.TypeToValue()
 
+    def GetValueName(self):
+        return self.m_valueName
+
     def StrToInt(self, strValue: str):    
         if len(strValue) < 1:
             return 0
@@ -84,7 +87,7 @@ class ExcelData:
             else:
                 value = bool(value)
         elif type == "long":
-            value = long(value)
+            value = self.StrToInt(value)
         elif type == "short":
             value = self.StrToInt(value)
         elif type == "float":
@@ -122,11 +125,12 @@ class ExcelData:
         elif type == "short":
             binValue = struct.pack("h", value)
         else:
-            binValue = struct.pack("%ds"%len(value), value)
+            value = value.encode("utf-8")
+            binValue = struct.pack("h%ds" % len(value), len(value), value)
         return binValue
 
     def GetCSType(self):
-        return ""
+        return self.m_type
 
     def GetValue(self):
         return self.m_value
@@ -150,6 +154,8 @@ class ExcelData:
             content = "pStream.ReadInt16();"
         elif type == "enum":
             content = "(" + self.m_enum + ")pStream.ReadInt32();"
+        elif type == "string":
+            content = "ReadUTF8String(pStream);"
         else: 
             print("type is error:" + type)
             exit()

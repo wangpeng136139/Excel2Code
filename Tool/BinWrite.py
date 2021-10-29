@@ -40,7 +40,7 @@ class BinWrite:
         self.WriteBin(binValue)     
 
     def EndWrite(self):
-        with open('file/pythonCopy.docx', 'wb') as wb:
+        with open(self.m_path, 'wb') as wb:
             for value in self.m_listContent:
                 wb.write(value)
         print("写入："+self.m_path)
