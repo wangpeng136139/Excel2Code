@@ -29,5 +29,7 @@ def GetIndex(enum: str, value: str) -> int:
 def ClearEnum() -> None:
     enumDic = {}
 
+
+
     
 

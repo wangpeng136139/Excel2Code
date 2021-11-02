@@ -1,6 +1,6 @@
 import CSDataBase
 import Derictory
-from ExcelWork import ExcelWork
+from ConfigExcelWork import ConfigExcelWork
 import os
 
 
@@ -21,7 +21,7 @@ def main():
     CSDataBase.WriteDataBase(configPath)
     for workpath in list:
         print("文件名:"+workpath)
-        item = ExcelWork(workpath)
+        item = ConfigExcelWork(workpath)
         item.ExportBin(BinPath)
         item.ExportCS(configPath)
 
