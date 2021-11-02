@@ -1,9 +1,6 @@
 import os
 from typing import List
 
-import os
-
-
 def DeleteDirFile(path):
     folder = ExistsDir(path)
     if not folder:
@@ -15,6 +12,7 @@ def DeleteDirFile(path):
             DeleteDirFile(c_path)
         else:
             os.remove(c_path)
+
 
 def CreateDir(path: str) -> None:
     folder = ExistsDir(path)
@@ -29,7 +27,12 @@ def DeleteDir(path: str) -> None:
 def ExistsDir(path: str) -> bool:
     exists = os.path.exists(path)
     return exists
-    
+
+
+def ExistsFile(path: str) -> bool:
+    exists = os.path.exists(path)
+    return exists
+
 
 def GetDirFileList(path) -> List:
     list_name = []

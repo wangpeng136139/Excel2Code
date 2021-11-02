@@ -5,11 +5,13 @@ class EnumData:
     __enum: str = ""  
     # int值
     __index: int = 0
-    
-    def __init__(self, value, enum, index) -> None:
+    # 注释
+    __des: str = ""
+    def __init__(self, value, enum, index, des) -> None:
         self.__value = value
         self.__enum = enum
-        self.__index = index
+        if type(index) != int:
+            self.__index = int(index)
     
     def GetValue(self) -> str:
         return self.__value
@@ -18,7 +20,11 @@ class EnumData:
         return self.__enum
 
     def GetInt(self) -> int:
-        return self.__index
+        return str(self.__index)
+
+    def GetDes(self) -> int:
+        return str(self.__des)
+
 
     
 
