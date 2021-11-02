@@ -11,8 +11,6 @@ namespace Config
 		public int ID =>  m_ID;
 		private bool m_Name;
 		public bool Name =>  m_Name;
-		private int m_parentID;
-		public int parentID =>  m_parentID;
 		private string m_id;
 		public string id =>  m_id;
 		private string m_ResNor;
@@ -120,13 +118,13 @@ namespace Config
 		{
 			 m_ID = pStream.ReadInt32();
 			 m_Name = pStream.ReadBoolean();
-			 m_parentID = pStream.ReadInt32();
 			 m_id = ReadUTF8String(pStream);
 			 m_ResNor = ReadUTF8String(pStream);
 			 m_ResSelect = ReadUTF8String(pStream);
 			 m_permissionIndex = pStream.ReadInt32();
 			 m_aaa = (CommonType)pStream.ReadInt32();
-			 Debug.LogError($"m_aaa{m_aaa}");
+			 Debug.Log($"m_aaa{m_aaa}");
+			 
 		}
 		#endregion
 	}

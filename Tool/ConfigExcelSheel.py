@@ -1,5 +1,5 @@
 from typing import List
-from ConfigExcelRow import ConfigExcelRow, ConfigExcelRowTitle, ConfigExcelRowType, ConfigExcelRowMark
+from ConfigExcelRow import ConfigExcelRow, ConfigExcelRowTitle, ConfigExcelRowType, ConfigExcelRowMark, DataExcelRow
 import xlrd
 
 
@@ -20,16 +20,19 @@ class ConfigExcelSheel:
     def __init__(self, sheet) -> None:
         self.__name = sheet.name
      
-        self.__rowMark = ConfigExcelRowMark(sheet.row_values(1))
-        self.__rowType = ConfigExcelRowType(sheet.row_values(2))
-        self.__rowTitle = ConfigExcelRowTitle(sheet.row_values(0), self.__rowType)
+        firstRow = sheet.row_values(0)
+        cullRow = DataExcelRow(firstRow, firstRow)
+        self.__rowMark = ConfigExcelRowMark(DataExcelRow(firstRow, sheet.row_values(1)))
+        self.__rowType = ConfigExcelRowType(DataExcelRow(firstRow, sheet.row_values(2)))
+        self.__rowTitle = ConfigExcelRowTitle(DataExcelRow(firstRow, sheet.row_values(0)), self.__rowType)
 
         self.__rowcount = sheet.nrows
-        self.__colcount = sheet.ncols       
+        self.__colcount = len(cullRow)
         for i in range(3, self.__rowcount):
-            row = sheet.row_values(i)
-            item = ConfigExcelRow(row, self.__rowTitle, self.__rowType, self.__rowMark, self.__colcount)
+            row = sheet.row_values(i)       
+            item = ConfigExcelRow(DataExcelRow(firstRow, row), self.__rowTitle, self.__rowType, self.__rowMark)
             self.__listrow.append(item)
+
 
     def GetName(self) -> str:
         return self.__name

@@ -1,8 +1,8 @@
 from typing import Dict
 from typing import List
-from Content import Content
-import ConfigExcelData
 from ConfigExcelSheel import ConfigExcelSheel
+from ConfigExcelData import ConfigExcelData
+from Content import Content
 from BinWrite import BinWrite
 import xlrd
 import ExcelUtils
@@ -73,8 +73,8 @@ class ConfigExcelWork:
         workName = self.__workName
         listKey = self.GetKeyList()
 
-        MainData:ExcelData = listKey[0]
-        SecondData:ExcelData = None
+        MainData:ConfigExcelData = listKey[0]
+        SecondData:ConfigExcelData = None
         listKeyCount = len(listKey)
         if listKeyCount > 1:
             SecondData = listKey[1]

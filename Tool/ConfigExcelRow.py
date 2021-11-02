@@ -4,18 +4,11 @@ import xlrd
 from ConfigExcelData import ConfigExcelData
 
 
-class ConfigExcelRowParent:
-    datalist: List = []
-
-    def GetValue(self, index):
-        return self.datalist[index].GetValue()
-
-
 class ConfigExcelRowTitle:
     def __init__(self, row, type) -> None:
         self.__datalist = []
-        rowCount = len(row)
-        for i in range(rowCount):
+        colCount = len(row)
+        for i in range(colCount):
             cell = row[i]
             item = ConfigExcelData("", cell, type.GetValue(i), "", True)
             self.__datalist.append(item)
@@ -43,8 +36,10 @@ class ConfigExcelRowTitle:
         for item in self.__datalist:
             csList.append(item.GetCSClassValue())
         return csList
-            
 
+    def GetCount(self) -> int:
+        return len(self.__datalist)
+            
     def GetMainKey(self) -> List:
         mainKeyList: List = []
         for item in self.__datalist:
@@ -59,9 +54,8 @@ class ConfigExcelRowTitle:
             mainKeyList.append(self.__datalist[0])
         
         return mainKeyList
-        
 
-        
+
 class ConfigExcelRowType:
     def __init__(self, row) -> None:
         self.__datalist = []
@@ -73,7 +67,6 @@ class ConfigExcelRowType:
         return self.__datalist[index].GetValue()
         
 
-
 class ConfigExcelRowMark:
     def __init__(self, row) -> None:
         self.__datalist: List = [] 
@@ -83,14 +76,17 @@ class ConfigExcelRowMark:
 
     def GetValue(self, index):
         return self.__datalist[index].GetValue()
-        
+
+    def GetCount(self) -> int:
+        return len(self.__datalist)
+
 
 class ConfigExcelRow:
-    def __init__(self, row, title, type, mark, colCount) -> None:
+    def __init__(self, row, title, type, mark) -> None:
         self.__datalist = []
-        rowCount = len(row)
+        colCount = len(row)
         for i in range(0, colCount):
-            if i < rowCount:
+            if i < colCount:
                 cell = row[i]
             else:
                 cell = ""
@@ -110,3 +106,19 @@ class ConfigExcelRow:
 
     def GetCellBin(self, index) -> list:
         return self.__datalist[index].GetBytes()
+
+
+class DataExcelRow:
+    def __init__(self, firstRow, curRow) -> None:
+        self.__datalist = []
+        for i in range(0, len(firstRow)):
+            value = firstRow[i]
+            if value.find("#") > -1:
+                continue
+            self.__datalist.append(curRow[i])
+
+    def __len__(self):
+        return len(self.__datalist)
+    
+    def __getitem__(self, key):
+        return self.__datalist[key]

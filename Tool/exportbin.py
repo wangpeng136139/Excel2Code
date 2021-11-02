@@ -30,7 +30,7 @@ def main():
         if enumFind > -1:
             continue
         item = ConfigExcelWork(workpath)
-        item.ExportBin(BinPath)
+        item.ExportBin(BinPath) 
         item.ExportCS(configPath)
 
     print("导出成功")

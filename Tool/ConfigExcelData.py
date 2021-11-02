@@ -26,6 +26,7 @@
 # s	char[]	string	1	 
 # p	char[]	string	 	 
 # P	void *	integer	 	(5), (3)
+from re import search
 import struct
 import EnumUtils
 
@@ -110,6 +111,9 @@ class ConfigExcelData:
             value = int(value)
         self.m_value = value
         
+    def GetMark(self) -> str:
+        return "//" + self.GetMark()
+
     def IsMainKey(self):
         return self.m_bMainKey
 
