@@ -1,3 +1,4 @@
+@echo off
 set CurPath=%~dp0
 set ConfigPath=%CurPath%Config
 set CsPath=%CurPath%ToolExcel/Assets/Configs
