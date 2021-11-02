@@ -2,19 +2,27 @@ import CSDataBase
 import Derictory
 from ConfigExcelWork import ConfigExcelWork
 import os
+import sys
 import EnumUtils
 
 
 def main():
-    path = os.getcwd() + "/../Config"
+    
+    # 配置路径
+    path = sys.argv[1] 
     path = path.replace("\\", "/")
-    list = Derictory.GetDirFileList(path)
-
-    configPath = os.getcwd() + "/../ToolExcel/Assets/Configs"
+    # 导出代码路径
+    configPath = sys.argv[2] 
     configPath = configPath.replace("\\", "/")
-
-    BinPath = os.getcwd() + "/../ToolExcel/Assets/StreamingAssets/Bin"
+    # 导出bin文件路径
+    BinPath = sys.argv[3] 
     BinPath = BinPath.replace("\\", "/")
+
+    print("配置路径: " + path)
+    print("导出代码路径: " + configPath)
+    print("导出bin文件路径: " + BinPath)
+
+    list = Derictory.GetDirFileList(path)
 
     Derictory.DeleteDirFile(BinPath)
     Derictory.DeleteDirFile(configPath)

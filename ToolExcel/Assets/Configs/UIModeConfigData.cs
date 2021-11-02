@@ -123,8 +123,6 @@ namespace Config
 			 m_ResSelect = ReadUTF8String(pStream);
 			 m_permissionIndex = pStream.ReadInt32();
 			 m_aaa = (CommonType)pStream.ReadInt32();
-			 Debug.Log($"m_aaa{m_aaa}");
-			 
 		}
 		#endregion
 	}
