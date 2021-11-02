@@ -24,8 +24,8 @@ def GetIndex(enum: str, value: str) -> int:
     if enum in __enumDic:
         dicList = __enumDic[enum]
     for item in dicList:
-        if item.value == value:
-            return item.value
+        if item.GetValue() == value:
+            return item.GetInt()  
     return -1
 
 
@@ -56,7 +56,7 @@ def ExportCS(path):
         content.StartBlock()
         for item in v:
             content.WriteLine("//" + item.GetDes())
-            content.WriteLine(item.GetValue() + " = " + item.GetInt() + " ,")
+            content.WriteLine(item.GetValueStr() + " = " + item.GetIntStr() + " ,")
 
         content.EndBlock()
         content.EndBlock()

@@ -21,6 +21,8 @@ namespace Config
 		public string ResSelect =>  m_ResSelect;
 		private int m_permissionIndex;
 		public int permissionIndex =>  m_permissionIndex;
+		private CommonType m_aaa;
+		public CommonType aaa =>  m_aaa;
 		#endregion
 		#region load and get funtion
 		private static Dictionary<int,UIModeConfigData> m_DicDatas = null;
@@ -123,6 +125,8 @@ namespace Config
 			 m_ResNor = ReadUTF8String(pStream);
 			 m_ResSelect = ReadUTF8String(pStream);
 			 m_permissionIndex = pStream.ReadInt32();
+			 m_aaa = (CommonType)pStream.ReadInt32();
+			 Debug.LogError($"m_aaa{m_aaa}");
 		}
 		#endregion
 	}

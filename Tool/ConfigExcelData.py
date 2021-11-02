@@ -46,7 +46,7 @@ class ConfigExcelData:
     # 所有枚举
     m_enum: str = ""
 
-    def __init__(self, value, valueName, type, mark) -> None:
+    def __init__(self, value, valueName, type, mark, isTitle) -> None:
         self.m_value = value
         self.m_type = type
         self.m_valueName = valueName
@@ -59,7 +59,13 @@ class ConfigExcelData:
         if secondIndex > -1:
             self.m_bSecondKey = True    
             valueName = valueName.replace("(Second)", "")
-        self.TypeToValue()
+        
+        if not isTitle:
+            self.TypeToValue()
+       
+        if self.m_type.find("enum") > -1:
+                self.m_enum = (self.m_type.split('.')[1])
+
 
     def GetValueName(self):
         return self.m_valueName
@@ -95,12 +101,12 @@ class ConfigExcelData:
                 value = 0
             else:
                 value = float(value)
-        elif type == "enum":
+        elif type.find("enum") > -1:
             list = value.split(".")
             if len(list) < 2:
                 print("value is error:" + value)
                 exit()
-            value = EnumUtils.GetIndex(list[0], [1])
+            value = EnumUtils.GetIndex(list[0], list[1])
             value = int(value)
         self.m_value = value
         
@@ -120,7 +126,7 @@ class ConfigExcelData:
             binValue = struct.pack("?", value)
         elif type == "float":
             binValue = struct.pack("f", value)
-        elif type == "enum":
+        elif type.find("enum") > -1:
             binValue = struct.pack("i", value)
         elif type == "short":
             binValue = struct.pack("h", value)
@@ -135,10 +141,19 @@ class ConfigExcelData:
     def GetValue(self):
         return self.m_value
 
+    def IsEnum(self) -> bool:
+        if self.m_type.find("enum") > -1:
+            return True
+        return False
+
     def GetCSClassValue(self):
+        if self.IsEnum():
+             return "private "+self.m_enum+" m_" + self.m_valueName + ";"
         return "private "+self.m_type+" m_" + self.m_valueName + ";"
 
     def GetCSGetValue(self):
+        if self.IsEnum():
+            return "public "+self.m_enum+" " + self.m_valueName + " => " + " m_" + self.m_valueName + ";"
         return "public "+self.m_type+" " + self.m_valueName + " => " + " m_" + self.m_valueName + ";"
 
     def GetCSReadValue(self):
@@ -152,7 +167,7 @@ class ConfigExcelData:
             content = "pStream.ReadSingle();"
         elif type == "short":
             content = "pStream.ReadInt16();"
-        elif type == "enum":
+        elif type.find("enum") > -1:
             content = "(" + self.m_enum + ")pStream.ReadInt32();"
         elif type == "string":
             content = "ReadUTF8String(pStream);"

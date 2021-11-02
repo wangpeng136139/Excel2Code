@@ -16,11 +16,17 @@ class EnumData:
     def GetValue(self) -> str:
         return self.__value
 
+    def GetValueStr(self) -> str:
+        return str(self.__value)
+
     def GetEnum(self) -> str:
         return self.__enum
 
     def GetInt(self) -> int:
-        return str(self.__index)
+        return int(self.__index)
+
+    def GetIntStr(self) -> int:
+        return str(int(self.__index))
 
     def GetDes(self) -> int:
         return str(self.__des)

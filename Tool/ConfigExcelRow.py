@@ -17,7 +17,7 @@ class ConfigExcelRowTitle:
         rowCount = len(row)
         for i in range(rowCount):
             cell = row[i]
-            item = ConfigExcelData("", cell, type.GetValue(i), "")
+            item = ConfigExcelData("", cell, type.GetValue(i), "", True)
             self.__datalist.append(item)
 
     def GetValue(self, index):
@@ -66,7 +66,7 @@ class ConfigExcelRowType:
     def __init__(self, row) -> None:
         self.__datalist = []
         for cell in row:
-           item = ConfigExcelData(cell, "", "", "")
+           item = ConfigExcelData(cell, "", "", "", False)
            self.__datalist.append(item)
 
     def GetValue(self, index):
@@ -78,7 +78,7 @@ class ConfigExcelRowMark:
     def __init__(self, row) -> None:
         self.__datalist: List = [] 
         for cell in row:
-           item = ConfigExcelData(cell, "", "", "")
+           item = ConfigExcelData(cell, "", "", "", False)
            self.__datalist.append(item)
 
     def GetValue(self, index):
@@ -99,7 +99,7 @@ class ConfigExcelRow:
 
             typeValue = type.GetValue(i).lower()
             markValue = mark.GetValue(i)
-            item = ConfigExcelData(cell, titleValue, typeValue, markValue)
+            item = ConfigExcelData(cell, titleValue, typeValue, markValue, False)
             self.__datalist.append(item)
         
     def GetCellBinList(self) -> list:
