@@ -171,6 +171,8 @@ class ConfigExcelData:
             content = "pStream.ReadSingle();"
         elif type == "short":
             content = "pStream.ReadInt16();"
+        elif type == "int64":
+            content = "pStream.ReadLong();"
         elif type.find("enum") > -1:
             content = "(" + self.m_enum + ")pStream.ReadInt32();"
         elif type == "string":
