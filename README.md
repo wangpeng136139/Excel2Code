@@ -11,16 +11,21 @@ pip install pyyaml
 
 ### __Path.yaml    
 basic configuration
+
 Path:
   CodePath: ../Data/Code
+  
   XlsxPath: ../Config
+  
   BinPath: ../Data/Bin
+  
   CodeType: csharp   
 
 ### Run
+
 Use exceltool.sh
 
 
 
 
-Currently only supports CSharp
+Currently only supports CSharp!!!!!
