@@ -10,6 +10,7 @@ class EnumData:
     def __init__(self, value, enum, index, des) -> None:
         self.__value = value
         self.__enum = enum
+        self.__des = des
         if type(index) != int:
             self.__index = int(index)
     

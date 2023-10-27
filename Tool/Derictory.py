@@ -1,6 +1,6 @@
 import os
 from typing import List
-
+import shutil;
 def DeleteDirFile(path):
     folder = ExistsDir(path)
     if not folder:
@@ -17,7 +17,7 @@ def DeleteDirFile(path):
 def CreateDir(path: str) -> None:
     folder = ExistsDir(path)
     if not folder:
-        os.mkdir(path)
+        os.makedirs(path)
 
 
 def DeleteDir(path: str) -> None:
@@ -32,6 +32,16 @@ def ExistsDir(path: str) -> bool:
 def ExistsFile(path: str) -> bool:
     exists = os.path.exists(path)
     return exists
+
+def CopyDirToDes(from_file,to_file):
+    if not os.path.exists(to_file):  # 如不存在目标目录则创建
+        os.makedirs(to_file)
+    files = os.listdir(from_file)  # 获取文件夹中文件和目录列表
+    for f in files:
+        if os.path.isdir(from_file + '/' + f):  # 判断是否是文件夹
+            CopyDirToDes(from_file + '/' + f, to_file + '/' + f)  # 递归调用本函数
+        else:
+            shutil.copy(from_file + '/' + f, to_file + '/' + f)  # 拷贝文件
 
 
 def GetDirFileList(path) -> List:

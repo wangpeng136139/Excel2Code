@@ -43,14 +43,18 @@ def InitByWork(work: ExcelWork) -> None:
         return
     
     for row in listRow:
-        AddEnum(row.GetValue(1), row.GetValue(0), row.GetValue(2), row.GetValue(3))
+        try:
+            AddEnum(row.GetValue(1), row.GetValue(0), row.GetValue(2), row.GetValue(3))
+        except:
+            ColorHelper.printRed("__CommonEnum.xlsx "+ row.GetValue(1) +" is error");
+            sys.exit();
 
 
 def ExportCS(path):
     for k, v in __enumDic.items():
         cspath = path + "/" + k + ".cs"
         content = Content()
-        content.WriteLine("namespace Config")
+        content.WriteLine("namespace TableConfig")
         content.StartBlock()
         content.WriteLine("public enum "+k)
         content.StartBlock()

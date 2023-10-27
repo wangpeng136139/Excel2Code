@@ -9,22 +9,15 @@ import xlrd
 # 第三行是类型，int string bool enum等，大小写无所谓
 # 第四行是具体数据的开始
 class ConfigExcelSheel:
-    __listrow: List = []
-    __name: str = ""
-    __rowTitle: ConfigExcelRowTitle = ""
-    __rowMark: ConfigExcelRowMark = ""
-    __rowType: ConfigExcelRowType = ""
-    __rowCount: int = 0
-    __colcount: int = 0
-
     def __init__(self, sheet) -> None:
         self.__name = sheet.name
      
         firstRow = sheet.row_values(0)
         cullRow = DataExcelRow(firstRow, firstRow)
+        self.__listrow = [];
         self.__rowMark = ConfigExcelRowMark(DataExcelRow(firstRow, sheet.row_values(1)))
         self.__rowType = ConfigExcelRowType(DataExcelRow(firstRow, sheet.row_values(2)))
-        self.__rowTitle = ConfigExcelRowTitle(DataExcelRow(firstRow, sheet.row_values(0)), self.__rowType)
+        self.__rowTitle = ConfigExcelRowTitle(DataExcelRow(firstRow, sheet.row_values(0)), self.__rowType,self.__rowMark);
 
         self.__rowcount = sheet.nrows
         self.__colcount = len(cullRow)
@@ -42,6 +35,10 @@ class ConfigExcelSheel:
 
     def GetCSReadValueList(self) -> List:
         return self.__rowTitle.GetCSReadValueList()
+
+    def GetCSMarkList(self) -> List:
+        return self.__rowTitle.GetCSMarkList()
+
 
     def GetCSGetValueList(self) -> List:
         return self.__rowTitle.GetCSGetValueList()

@@ -1,0 +1,5 @@
+Path:
+  CodePath: ../Data/Code
+  XlsxPath: ../Config
+  BinPath: ../Data/Bin
+  CodeType: csharp

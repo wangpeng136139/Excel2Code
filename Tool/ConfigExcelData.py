@@ -29,38 +29,27 @@
 from re import search
 import struct
 import EnumUtils
+import ColorHelper
 
 
 class ConfigExcelData:
-    # 内容
-    m_value: str 
-    # 类型
-    m_type: str
-    # 变量名称
-    m_valueName: str
-    # 注释
-    m_mark: str
-    # 是否为主键
-    m_bMainKey: bool = False
-    # 是否为第二主键
-    m_bSecondKey: bool = False
-    # 所有枚举
-    m_enum: str = ""
-
     def __init__(self, value, valueName, type, mark, isTitle) -> None:
         self.m_value = value
-        self.m_type = type
-        self.m_valueName = valueName
+        self.m_type = type;
+        self.m_type  = self.m_type.replace(" ","");
+        
         self.m_mark = mark
-        mainIndex = valueName.find("(Main)")
-        secondIndex = valueName.find("(Second)")
+        mainIndex = valueName.find("(FirstKey)")
+        secondIndex = valueName.find("(SecondKey)")
+        self.m_bMainKey = False;
+        self.m_bSecondKey = False;    
         if mainIndex > -1:
             self.m_bMainKey = True
-            valueName = valueName.replace("(Main)", "")
+            valueName = valueName.replace("(FirstKey)", "")
         if secondIndex > -1:
             self.m_bSecondKey = True    
-            valueName = valueName.replace("(Second)", "")
-        
+            valueName = valueName.replace("(SecondKey)", "")
+        self.m_valueName = valueName;
         if not isTitle:
             self.TypeToValue()
        
@@ -70,6 +59,9 @@ class ConfigExcelData:
 
     def GetValueName(self):
         return self.m_valueName
+
+    def GetCSMarkValue(self):
+        return self.m_mark
 
     def StrToInt(self, strValue: str):    
         if len(strValue) < 1:
@@ -86,14 +78,15 @@ class ConfigExcelData:
     def TypeToValue(self):
         value = str(self.m_value)
         type = self.m_type
-        if type == "int":
+        type = type.lower();
+        if type == "int" or type == "int32":
            value = self.StrToInt(value)
         elif type == "bool":
             if len(value) < 1:
                 value = False
             else:
                 value = bool(value)
-        elif type == "long":
+        elif type == "long" or type == "int64":
             value = self.StrToInt(value)
         elif type == "short":
             value = self.StrToInt(value)
@@ -105,7 +98,7 @@ class ConfigExcelData:
         elif type.find("enum") > -1:
             list = value.split(".")
             if len(list) < 2:
-                print("value is error:" + value)
+                ColorHelper.printRed("value is error:" + value)
                 exit()
             value = EnumUtils.GetIndex(list[0], list[1])
             value = int(value)
@@ -124,8 +117,11 @@ class ConfigExcelData:
         value = self.m_value
         binValue = ""
         type = self.m_type
-        if type == "int":
+        type = type.lower();
+        if type == "int" or type == "int32":
             binValue = struct.pack("i", value)
+        elif type == "long" or type == "int64":
+            binValue = struct.pack("l", value)
         elif type == "bool":
             binValue = struct.pack("?", value)
         elif type == "float":
@@ -134,9 +130,12 @@ class ConfigExcelData:
             binValue = struct.pack("i", value)
         elif type == "short":
             binValue = struct.pack("h", value)
+        elif type == "string":    
+            value = value.encode("utf-8")
+            binValue = struct.pack("i%ds" % len(value), len(value), value)
         else:
             value = value.encode("utf-8")
-            binValue = struct.pack("h%ds" % len(value), len(value), value)
+            binValue = struct.pack("i%ds" % len(value), len(value), value)
         return binValue
 
     def GetCSType(self):
@@ -163,20 +162,21 @@ class ConfigExcelData:
     def GetCSReadValue(self):
         content: str = ""
         type = self.m_type
-        if type == "int":
-            content = "pStream.ReadInt32();"
+        type == type.lower();
+        if type == "int" or type == "int32":
+            content = "bin.ReadInt32();"
         elif type == "bool":
-            content = "pStream.ReadBoolean();"
+            content = "bin.ReadBoolean();"
         elif type == "float":
-            content = "pStream.ReadSingle();"
+            content = "bin.ReadFloat();"
         elif type == "short":
-            content = "pStream.ReadInt16();"
-        elif type == "int64":
-            content = "pStream.ReadLong();"
+            content = "bin.ReadInt16();"
+        elif type == "int64" or type == "long":
+            content = "bin.ReadInt64();"
         elif type.find("enum") > -1:
-            content = "(" + self.m_enum + ")pStream.ReadInt32();"
+            content = "(" + self.m_enum + ")bin.ReadInt32();"
         elif type == "string":
-            content = "ReadUTF8String(pStream);"
+            content = "bin.ReadString();"
         else: 
             print("type is error:" + type)
             exit()

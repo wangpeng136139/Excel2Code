@@ -5,12 +5,12 @@ from ConfigExcelData import ConfigExcelData
 
 
 class ConfigExcelRowTitle:
-    def __init__(self, row, type) -> None:
+    def __init__(self, row, type,mark) -> None:
         self.__datalist = []
         colCount = len(row)
         for i in range(colCount):
             cell = row[i]
-            item = ConfigExcelData("", cell, type.GetValue(i), "", True)
+            item = ConfigExcelData("", cell, type.GetValue(i), mark.GetValue(i), True)
             self.__datalist.append(item)
 
     def GetValue(self, index):
@@ -23,6 +23,12 @@ class ConfigExcelRowTitle:
         csList = []
         for item in self.__datalist:
             csList.append(item.GetCSReadValue())
+        return csList
+
+    def GetCSMarkList(self) -> List:
+        csList = []
+        for item in self.__datalist:
+            csList.append(item.GetCSMarkValue())
         return csList
 
     def GetCSGetValueList(self) -> List:
@@ -49,9 +55,6 @@ class ConfigExcelRowTitle:
         for item in self.__datalist:
             if item.IsSecondKey() == True:
                 mainKeyList.append(item)
-
-        if len(mainKeyList) < 1:
-            mainKeyList.append(self.__datalist[0])
         
         return mainKeyList
 

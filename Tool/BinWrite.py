@@ -43,6 +43,6 @@ class BinWrite:
         with open(self.m_path, 'wb') as wb:
             for value in self.m_listContent:
                 wb.write(value)
-        print("写入："+self.m_path)
+        print("write end："+self.m_path)
     
         
