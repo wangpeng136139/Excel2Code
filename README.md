@@ -22,6 +22,15 @@ Path:
   
   CodeType: csharp   
 
+### Example
+csharp:
+```
+ DataBase.SetDataPath("E:/Bin");
+ Test.Load();
+ Test1.Load();
+ Test2.Load();
+```
+
 ### Run
 
 Use exceltool.sh
