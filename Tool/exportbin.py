@@ -6,6 +6,8 @@ import EnumUtils
 import ColorHelper
 import sys;
 import yaml;
+from CommonType import VariableType;
+from CommonType import CodeType;
 
 def main():
     os.chdir(os.sys.path[0]);
@@ -17,13 +19,20 @@ def main():
         configPath =  yamlContent["Path"]["XlsxPath"];
         BinPath =  yamlContent["Path"]["BinPath"];
         CodePath =  yamlContent["Path"]["CodePath"];
-        CodeType =  yamlContent["Path"]["CodeType"];
+        CodeContentInt =  int(yamlContent["Path"]["CodeType"]);
     except:
         ColorHelper.printRed(yamlPath + " is error");
         sys.exit();
 
-    templatePath =os.path.join(os.getcwd(),"template","csharp"); 
-    templatePath = templatePath.replace("\\","/");
+    CodeContentType = CodeType(CodeContentInt);
+    templatePath = "";
+    if CodeContentType == CodeType.CPP:
+        templatePath =os.path.join(os.getcwd(),"template","c++"); 
+        templatePath = templatePath.replace("\\","/");
+    elif CodeContentType == CodeType.CS:
+        templatePath =os.path.join(os.getcwd(),"template","csharp"); 
+        templatePath = templatePath.replace("\\","/");
+
     print("curl path: " +  os.getcwd())
     print("xlxs path: " + CodePath)
     print("code path: " + configPath)
@@ -41,7 +50,10 @@ def main():
         EnumPath = os.path.join(configPath, "__CommonEnum.xlsx");
         EnumPath = EnumPath.replace("\\", "/")
         EnumUtils.Init(EnumPath)
-        EnumUtils.ExportCS(CodePath);
+        if CodeContentType == CodeType.CPP:
+            EnumUtils.ExportCpp(CodePath);
+        elif CodeContentType == CodeType.CS:
+            EnumUtils.ExportCS(CodePath);
     except:
         ColorHelper.printRed("__CommonEnum.xlsx is error");
         sys.exit();
@@ -55,7 +67,10 @@ def main():
             continue
         item = ConfigExcelWork(workpath)
         item.ExportBin(BinPath) 
-        item.ExportCS(CodePath,templatePath)
+        if CodeContentType == CodeType.CS:
+            item.ExportCS(CodePath,templatePath);
+        elif CodeContentType == CodeType.CPP:
+            item.ExportCpp(CodePath,templatePath);
 
     print("success");
 

@@ -50,6 +50,20 @@ def InitByWork(work: ExcelWork) -> None:
             sys.exit();
 
 
+def ExportCpp(path):
+    cspath = path + "/CommonEnum.h"
+    content = Content()
+    for k, v in __enumDic.items():
+        content.WriteLine("enum "+k)
+        content.StartBlock()
+        for item in v:
+            content.WriteLine("//" + item.GetDes())
+            content.WriteLine(item.GetValueStr() + " = " + item.GetIntStr() + " ,")
+        content.EndBlock()
+        content.WriteLine("\n");
+    content.WriteLine(";");    
+    content.WriteFile(cspath)
+
 def ExportCS(path):
     for k, v in __enumDic.items():
         cspath = path + "/" + k + ".cs"

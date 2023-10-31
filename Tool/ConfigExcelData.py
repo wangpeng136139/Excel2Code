@@ -30,14 +30,18 @@ from re import search
 import struct
 import EnumUtils
 import ColorHelper
+import CommonType
+from CommonType import VariableType;
+from CommonType import CodeType;
 
 
 class ConfigExcelData:
     def __init__(self, value, valueName, type, mark, isTitle) -> None:
+        self.m_enum = "";
         self.m_value = value
-        self.m_type = type;
-        self.m_type  = self.m_type.replace(" ","");
-        
+        self.m_typeStr = type;
+        self.m_typeStr  = self.m_typeStr.replace(" ","");
+        self.m_valueType = CommonType.GetStrToType(self.m_typeStr);
         self.m_mark = mark
         mainIndex = valueName.find("(FirstKey)")
         secondIndex = valueName.find("(SecondKey)")
@@ -53,15 +57,13 @@ class ConfigExcelData:
         if not isTitle:
             self.TypeToValue()
        
-        if self.m_type.find("enum") > -1:
-                self.m_enum = (self.m_type.split('.')[1])
+        if self.m_typeStr.find("enum") > -1:
+                self.m_enum = (self.m_typeStr.split('.')[1])
 
 
     def GetValueName(self):
         return self.m_valueName
 
-    def GetCSMarkValue(self):
-        return self.m_mark
 
     def StrToInt(self, strValue: str):    
         if len(strValue) < 1:
@@ -75,27 +77,28 @@ class ConfigExcelData:
         
         return int(strValue)
 
+
+    def TypeIsInt(self):
+        return VariableType.INT16 == self.m_valueType or VariableType.INT32 == self.m_valueType  or VariableType.INT64 == self.m_valueType or VariableType.UINT16 == self.m_valueType or VariableType.UINT32 == self.m_valueType  or VariableType.UINT64 == self.m_valueType;
+    
+    def TypeIsFloat(self):
+        return VariableType.FLOAT == self.m_valueType or VariableType.DOUBLE == self.m_valueType;
+
     def TypeToValue(self):
-        value = str(self.m_value)
-        type = self.m_type
-        type = type.lower();
-        if type == "int" or type == "int32":
+        value = str(self.m_value);
+        if self.TypeIsInt() == True:
            value = self.StrToInt(value)
-        elif type == "bool":
+        elif VariableType.BOOL == self.m_valueType:
             if len(value) < 1:
                 value = False
             else:
                 value = bool(value)
-        elif type == "long" or type == "int64":
-            value = self.StrToInt(value)
-        elif type == "short":
-            value = self.StrToInt(value)
-        elif type == "float":
+        elif self.TypeIsFloat() == True:
             if len(value) < 1:
                 value = 0
             else:
                 value = float(value)
-        elif type.find("enum") > -1:
+        elif VariableType.ENUM == self.m_valueType:
             list = value.split(".")
             if len(list) < 2:
                 ColorHelper.printRed("value is error:" + value)
@@ -105,7 +108,7 @@ class ConfigExcelData:
         self.m_value = value
         
     def GetMark(self) -> str:
-        return "//" + self.GetMark()
+        return  self.m_mark;
 
     def IsMainKey(self):
         return self.m_bMainKey
@@ -116,21 +119,27 @@ class ConfigExcelData:
     def GetBytes(self):
         value = self.m_value
         binValue = ""
-        type = self.m_type
-        type = type.lower();
-        if type == "int" or type == "int32":
-            binValue = struct.pack("i", value)
-        elif type == "long" or type == "int64":
-            binValue = struct.pack("l", value)
-        elif type == "bool":
-            binValue = struct.pack("?", value)
-        elif type == "float":
-            binValue = struct.pack("f", value)
-        elif type.find("enum") > -1:
-            binValue = struct.pack("i", value)
-        elif type == "short":
+        if self.m_valueType == VariableType.INT16:
             binValue = struct.pack("h", value)
-        elif type == "string":    
+        if self.m_valueType == VariableType.INT32:
+            binValue = struct.pack("i", value)
+        elif self.m_valueType == VariableType.INT64:
+            binValue = struct.pack("l", value)
+        elif self.m_valueType == VariableType.UINT16:
+            binValue = struct.pack("H", value)
+        elif self.m_valueType == VariableType.UINT32:
+            binValue = struct.pack("I", value)
+        elif self.m_valueType == VariableType.UINT64:
+            binValue = struct.pack("L", value)
+        elif self.m_valueType == VariableType.BOOL:
+            binValue = struct.pack("?", value)
+        elif self.m_valueType == VariableType.FLOAT:
+            binValue = struct.pack("f", value)
+        elif self.m_valueType == VariableType.DOUBLE:
+            binValue = struct.pack("d", value)
+        elif self.m_valueType == VariableType.ENUM:
+            binValue = struct.pack("i", value)
+        elif self.m_valueType == VariableType.STRING:
             value = value.encode("utf-8")
             binValue = struct.pack("i%ds" % len(value), len(value), value)
         else:
@@ -138,46 +147,46 @@ class ConfigExcelData:
             binValue = struct.pack("i%ds" % len(value), len(value), value)
         return binValue
 
-    def GetCSType(self):
-        return self.m_type
 
     def GetValue(self):
         return self.m_value
 
     def IsEnum(self) -> bool:
-        if self.m_type.find("enum") > -1:
+        if self.m_typeStr.find("enum") > -1:
             return True
         return False
 
-    def GetCSClassValue(self):
-        if self.IsEnum():
-             return "private "+self.m_enum+" m_" + self.m_valueName + ";"
-        return "private "+self.m_type+" m_" + self.m_valueName + ";"
+    def GetVariableType(self,codeType:CodeType):
+        if codeType == CodeType.CS:
+            if self.IsEnum():
+                return self.m_enum;
+            return CommonType.GetTypeToStr(self.m_valueType,codeType);
+        elif codeType == CodeType.CPP:
+            if self.IsEnum():
+                return self.m_enum;
+            return CommonType.GetTypeToStr(self.m_valueType,codeType);
 
-    def GetCSGetValue(self):
-        if self.IsEnum():
-            return "public "+self.m_enum+" " + self.m_valueName + " => " + " m_" + self.m_valueName + ";"
-        return "public "+self.m_type+" " + self.m_valueName + " => " + " m_" + self.m_valueName + ";"
 
-    def GetCSReadValue(self):
-        content: str = ""
-        type = self.m_type
-        type == type.lower();
-        if type == "int" or type == "int32":
-            content = "bin.ReadInt32();"
-        elif type == "bool":
-            content = "bin.ReadBoolean();"
-        elif type == "float":
-            content = "bin.ReadFloat();"
-        elif type == "short":
-            content = "bin.ReadInt16();"
-        elif type == "int64" or type == "long":
-            content = "bin.ReadInt64();"
-        elif type.find("enum") > -1:
-            content = "(" + self.m_enum + ")bin.ReadInt32();"
-        elif type == "string":
-            content = "bin.ReadString();"
-        else: 
-            print("type is error:" + type)
-            exit()
-        return " m_" + self.m_valueName + " = " + content
+    def GetVariable(self,codeType:CodeType):
+        if codeType == CodeType.CS:
+            if self.IsEnum():
+                return "private "+self.m_enum+" m_" + self.m_valueName + ";"
+            return "private "+CommonType.GetTypeToStr(self.m_valueType,codeType)+" m_" + self.m_valueName + ";"
+        elif codeType == CodeType.CPP:
+            if self.IsEnum():
+                return self.m_enum+" m_" + self.m_valueName + ";"
+            return CommonType.GetTypeToStr(self.m_valueType,codeType)+" m_" + self.m_valueName + ";"
+
+    def GetGetVariableRead(self,codeType:CodeType):
+        if codeType == CodeType.CS:
+            if self.IsEnum():
+                return "public "+self.m_enum+" " + self.m_valueName + " => " + " m_" + self.m_valueName + ";"
+            return "public "+CommonType.GetTypeToStr(self.m_valueType,codeType)+" " + self.m_valueName + " => " + " m_" + self.m_valueName + ";"
+        elif codeType == CodeType.CPP:
+            if self.IsEnum():
+                return self.m_enum +" Get" + self.m_valueName + "(){ return m_" + self.m_valueName + ";};"
+            return CommonType.GetTypeToStr(self.m_valueType,codeType)+" Get" + self.m_valueName + "(){ return m_" + self.m_valueName + ";};"
+
+    def GetTypeToRead(self,codeType:CodeType):
+        readContent =  CommonType.GetTypeToRead(self.m_valueType,codeType,self.m_enum);
+        return " m_" + self.m_valueName + " = " + readContent;

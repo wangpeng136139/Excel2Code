@@ -89,7 +89,7 @@ namespace TableConfig
 			return v;
 		}
 		
-		public unsafe double Readdouble()
+		public unsafe double ReadDouble()
 		{
 			double a = 0;
 			byte i;
