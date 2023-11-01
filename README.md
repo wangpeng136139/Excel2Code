@@ -13,7 +13,7 @@ pip install pyyaml
 basic configuration
 
 Path:
-
+```
   CodePath: ../Data/Code
   
   XlsxPath: ../Config
@@ -21,6 +21,10 @@ Path:
   BinPath: ../Data/Bin
   
   CodeType: csharp   
+
+  JavaPackageName: TableConfig
+```
+
 
 ### Example
 csharp:
