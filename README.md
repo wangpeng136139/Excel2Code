@@ -25,17 +25,32 @@ Path:
 ### Example
 csharp:
 ```
- DataBase.SetDataPath("E:/Bin");
+ DataBase.SetDataPath("E:/Bin/");
+ Test.Load();
+ Test1.Load();
+ Test2.Load();
+```
+java
+```
+ DataBase.SetDataPath("E:/Bin/");
  Test.Load();
  Test1.Load();
  Test2.Load();
 ```
 
+C++
+```
+DataBase::SetDataPath("E:/project/ExportExcel/Data/Bin/");
+Test::Load();
+Test1::Load();
+Test2::Load();
+```
 ### Run
 
 Use exceltool.sh
 
 
-
-
-Currently only supports CSharp!!!!!
+### support languange:
+C++
+CSharp
+Java
