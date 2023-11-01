@@ -1,6 +1,8 @@
 from typing import List
 from ConfigExcelRow import ConfigExcelRow, ConfigExcelRowTitle, ConfigExcelRowType, ConfigExcelRowMark, DataExcelRow
 import xlrd
+from CommonType import VariableType;
+from CommonType import CodeType;
 
 
 # 第一行变量名 加#代表不写入，第一列一定是ID
@@ -33,18 +35,23 @@ class ConfigExcelSheel:
     def GetRowCount(self) -> int:
         return self.__rowcount
 
-    def GetCSReadValueList(self) -> List:
-        return self.__rowTitle.GetCSReadValueList()
+    def GetVariableType(self,codeType:CodeType):
+        return self.__rowTitle.GetVariableType(codeType);
 
-    def GetCSMarkList(self) -> List:
-        return self.__rowTitle.GetCSMarkList()
+    def GetGetVariableRead(self,codeType:CodeType) -> List:
+        return self.__rowTitle.GetGetVariableRead(codeType);
+
+    def GetMarkList(self) -> List:
+        return self.__rowTitle.GetMarkList()
 
 
-    def GetCSGetValueList(self) -> List:
-        return self.__rowTitle.GetCSGetValueList()
+    def GetVariable(self,codeType:CodeType) -> List:
+        return self.__rowTitle.GetVariable(codeType)
 
-    def GetCSClassValue(self) -> List:
-        return self.__rowTitle.GetCSClassValue()
+    def GetTypeToRead(self,codeType:CodeType) -> List:
+        return self.__rowTitle.GetTypeToRead(codeType)
+
+
 
     def GetMainKey(self) -> List:
         return self.__rowTitle.GetMainKey()
@@ -58,5 +65,3 @@ class ConfigExcelSheel:
                 binList.append(row.GetCellBin(colIndex))
         return binList
             
-
-

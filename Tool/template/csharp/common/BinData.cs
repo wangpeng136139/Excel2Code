@@ -32,7 +32,7 @@ namespace TableConfig
 			string str = string.Empty;
 			for (int i = 0; i < count; ++i)
 			{
-				commonstring[i] = ReadCommonString();
+				commonstring[i] = ReadString();
 			}
 		}
 
@@ -89,7 +89,7 @@ namespace TableConfig
 			return v;
 		}
 		
-		public unsafe double Readdouble()
+		public unsafe double ReadDouble()
 		{
 			double a = 0;
 			byte i;

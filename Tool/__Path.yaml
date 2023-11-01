@@ -1,5 +1,10 @@
+#    CS = 0,
+#    CPP = 1,
+#    JAVA = 2,
+#    LUA = 3,
 Path:
   CodePath: ../Data/Code
   XlsxPath: ../Config
   BinPath: ../Data/Bin
-  CodeType: csharp
+  CodeType: 1
+  JavaPackage:TableConfig

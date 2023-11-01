@@ -2,7 +2,8 @@ from typing import List, Tuple
 import xlrd
 
 from ConfigExcelData import ConfigExcelData
-
+from CommonType import VariableType;
+from CommonType import CodeType;
 
 class ConfigExcelRowTitle:
     def __init__(self, row, type,mark) -> None:
@@ -19,28 +20,32 @@ class ConfigExcelRowTitle:
     def GetValueName(self, index):
         return self.__datalist[index].GetValueName()
 
-    def GetCSReadValueList(self) -> List:
+    def GetVariableType(self,codeType:CodeType):
+        return self.__datalist[index].GetVariableType(codeType);
+
+    def GetVariable(self,codeType:CodeType):
         csList = []
         for item in self.__datalist:
-            csList.append(item.GetCSReadValue())
+            csList.append(item.GetVariable(codeType))
         return csList
 
-    def GetCSMarkList(self) -> List:
+
+    def GetGetVariableRead(self,codeType:CodeType):
         csList = []
         for item in self.__datalist:
-            csList.append(item.GetCSMarkValue())
+            csList.append(item.GetGetVariableRead(codeType))
         return csList
 
-    def GetCSGetValueList(self) -> List:
+    def GetMarkList(self) -> List:
         csList = []
         for item in self.__datalist:
-            csList.append(item.GetCSGetValue())
+            csList.append(item.GetMark())
         return csList
 
-    def GetCSClassValue(self) -> List:
+    def GetTypeToRead(self,codeType:CodeType) -> List:
         csList = []
         for item in self.__datalist:
-            csList.append(item.GetCSClassValue())
+            csList.append(item.GetTypeToRead(codeType));
         return csList
 
     def GetCount(self) -> int:
