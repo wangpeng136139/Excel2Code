@@ -81,11 +81,11 @@ def ExportCS(path):
         content.WriteFile(cspath)
 
 
-def ExportJava(path):
+def ExportJava(path,javaPackage):
     for k, v in __enumDic.items():
         cspath = path + "/" + k + ".java"
         content = Content()
-        content.WriteLine("package TableConfig;");
+        content.WriteLine("package "+javaPackage+";");
         content.WriteLine("public enum "+k)
         content.StartBlock()
         for item in v:

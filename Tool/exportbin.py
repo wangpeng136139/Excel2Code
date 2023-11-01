@@ -11,6 +11,7 @@ from CommonType import CodeType;
 
 def main():
     os.chdir(os.sys.path[0]);
+    print("curl path: " +  os.getcwd())
     try:
         yamlPath = os.path.join(os.getcwd(),"__Path.yaml");
         yamlPath = yamlPath.replace("\\","/");
@@ -20,9 +21,9 @@ def main():
         BinPath =  yamlContent["Path"]["BinPath"];
         CodePath =  yamlContent["Path"]["CodePath"];
         CodeContentInt =  int(yamlContent["Path"]["CodeType"]);
-        JavaPackage = yamlContent["Path"]["JavaPackage"];
-    except:
-        ColorHelper.printRed(yamlPath + " is error");
+        JavaPackage = yamlContent["Path"]["JavaPackageName"];
+    except BaseException as e:
+        ColorHelper.printRed(yamlPath + " is error" + str(e));
         sys.exit();
 
     CodeContentType = CodeType(CodeContentInt);
@@ -78,7 +79,7 @@ def main():
         elif CodeContentType == CodeType.CPP:
             item.ExportCpp(CodePath,templatePath);
         elif CodeContentType == CodeType.JAVA:
-            item.ExportJava(CodePath,templatePath);
+            item.ExportJava(CodePath,templatePath,JavaPackage);
 
     print("success");
 
