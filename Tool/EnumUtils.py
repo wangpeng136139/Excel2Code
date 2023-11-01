@@ -81,5 +81,43 @@ def ExportCS(path):
         content.WriteFile(cspath)
 
 
-    
+def ExportJava(path):
+    for k, v in __enumDic.items():
+        cspath = path + "/" + k + ".java"
+        content = Content()
+        content.WriteLine("package TableConfig;");
+        content.WriteLine("public enum "+k)
+        content.StartBlock()
+        for item in v:
+            content.WriteLine("//" + item.GetDes())
+            content.WriteLine(item.GetValueStr() + "(" + item.GetIntStr() + "),")
+        content.WriteLine(";");
+
+        content.WriteLine(k + "(int v)");
+        content.StartBlock();
+        content.WriteLine("this."+k+"=v;");
+        content.EndBlock();
+
+        content.WriteLine("public int Get"+k+"()");
+        content.StartBlock();
+        content.WriteLine("return "+k+";");
+        content.EndBlock();
+
+        content.WriteLine("private final int "+k+";");
+
+        
+        content.WriteLine("public static "+k+" fromInt(int v)");
+        content.StartBlock();
+        content.WriteLine("switch (v)");
+        content.StartBlock();
+        for item in v:
+            content.WriteLine("case "+ item.GetIntStr() + ":");
+            content.WriteLine("return " +  item.GetValueStr() + ";");
+        content.EndBlock();
+        content.WriteLine("return null; ");
+        content.EndBlock();
+
+
+        content.EndBlock()
+        content.WriteFile(cspath)
 

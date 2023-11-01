@@ -65,6 +65,8 @@ def GetTypeToRead(etype:VariableType,codeType:CodeType,enumName:str):
             return "bin.ReadInt16();";
         elif codeType == CodeType.CPP:
             return "bin->ReadInt16();";
+        elif codeType == CodeType.JAVA:
+            return "bin.ReadInt16();";     
            
 
     if etype == VariableType.INT32:
@@ -72,6 +74,8 @@ def GetTypeToRead(etype:VariableType,codeType:CodeType,enumName:str):
             return "bin.ReadInt32();";
         elif codeType == CodeType.CPP:
             return "bin->ReadInt32();";
+        elif codeType == CodeType.JAVA:
+            return "bin.ReadInt32();";   
 
 
     if etype == VariableType.INT64:
@@ -79,18 +83,25 @@ def GetTypeToRead(etype:VariableType,codeType:CodeType,enumName:str):
             return "bin.ReadInt64();";
         elif codeType == CodeType.CPP:
             return "bin->ReadInt64();";
+        elif codeType == CodeType.JAVA:
+            return "bin.ReadInt64();"; 
 
     if etype == VariableType.UINT16:
         if codeType == CodeType.CS:
             return "bin.ReadUInt16();";
         elif codeType == CodeType.CPP:
             return "bin->ReadUInt16();";
+        elif codeType == CodeType.JAVA:
+            return "bin.ReadUInt16();";
 
     if etype == VariableType.UINT32:
         if codeType == CodeType.CS:
             return "bin.ReadString();";
         elif codeType == CodeType.CPP:
             return "bin->ReadString();";
+        elif codeType == CodeType.JAVA:
+            return "bin.ReadString();";
+
 
 
     if etype == VariableType.UINT64:
@@ -98,12 +109,16 @@ def GetTypeToRead(etype:VariableType,codeType:CodeType,enumName:str):
             return "bin.ReadUInt64();";
         elif codeType == CodeType.CPP:
             return "bin->ReadUInt64();";
+        elif codeType == CodeType.JAVA:
+            return "bin.ReadUInt64();";
 
     if etype == VariableType.STRING:
         if codeType == CodeType.CS:
             return "bin.ReadString();";
         elif codeType == CodeType.CPP:
             return "bin->ReadString();";
+        elif codeType == CodeType.JAVA:
+            return "bin.ReadString();";
 
 
     if etype == VariableType.FLOAT:
@@ -111,12 +126,16 @@ def GetTypeToRead(etype:VariableType,codeType:CodeType,enumName:str):
             return "bin.ReadFloat();";
         elif codeType == CodeType.CPP:
             return "bin->ReadFloat();";
+        elif codeType == CodeType.JAVA:
+            return "bin.ReadFloat();";
 
     if etype == VariableType.DOUBLE:
         if codeType == CodeType.CS:
             return "bin.ReadDouble();";
         elif codeType == CodeType.CPP:
             return "bin->ReadDouble();";
+        elif codeType == CodeType.JAVA:
+            return "bin.ReadDouble();";
 
 
     if etype == VariableType.BOOL:
@@ -124,6 +143,8 @@ def GetTypeToRead(etype:VariableType,codeType:CodeType,enumName:str):
             return "bin.ReadBoolean();";
         elif codeType == CodeType.CPP:
             return "bin->ReadBoolean();";
+        elif codeType == CodeType.JAVA:
+            return "bin.ReadBoolean();";
 
 
     if etype == VariableType.ENUM:
@@ -131,6 +152,8 @@ def GetTypeToRead(etype:VariableType,codeType:CodeType,enumName:str):
             return "("+enumName + ")bin.ReadInt32();";
         elif codeType == CodeType.CPP:
             return "("+enumName + ")bin->ReadInt32();";
+        elif codeType == CodeType.JAVA:
+            return enumName + ".fromInt(bin.ReadInt32());";
     return "GetTypeToRead error";
         
  
@@ -140,58 +163,72 @@ def GetTypeToStr(etype:VariableType,codeType:CodeType):
             return "Int16";
         elif codeType == CodeType.CPP:
             return "short";
+        elif codeType == CodeType.JAVA:
+            return "Short";    
 
     if etype == VariableType.INT32:
         if codeType == CodeType.CS:
             return "Int32";
         elif codeType == CodeType.CPP:
             return "int";
-
+        elif codeType == CodeType.JAVA:
+            return "Integer";
 
     if etype == VariableType.INT64:
         if codeType == CodeType.CS:
             return "Int64";
         elif codeType == CodeType.CPP:
             return "long";
+        elif codeType == CodeType.JAVA:
+            return "Long";
 
     if etype == VariableType.UINT16:
         if codeType == CodeType.CS:
             return "UInt16";
         elif codeType == CodeType.CPP:
             return "unsigned short";
+        elif codeType == CodeType.JAVA:
+            return "Short";
 
-    if etype == VariableType.UINT32:
+    if etype == VariableType.UINT32:    
         if codeType == CodeType.CS:
             return "UInt32";
         elif codeType == CodeType.CPP:
             return "unsigned int";
-
+        elif codeType == CodeType.JAVA:
+            return "Integer";
 
     if etype == VariableType.UINT64:
         if codeType == CodeType.CS:
             return "UInt64";
         elif codeType == CodeType.CPP:
             return "unsigned long";
-
+        elif codeType == CodeType.JAVA:
+            return "Long";
 
     if etype == VariableType.STRING:
         if codeType == CodeType.CS:
             return "string";
         elif codeType == CodeType.CPP:
             return "std::string";
-
+        elif codeType == CodeType.JAVA:
+            return "String";
 
     if etype == VariableType.FLOAT:
         if codeType == CodeType.CS:
             return "float";
         elif codeType == CodeType.CPP:
             return "float";
+        elif codeType == CodeType.JAVA:
+            return "Float";
 
     if etype == VariableType.DOUBLE:
         if codeType == CodeType.CS:
             return "double";
         elif codeType == CodeType.CPP:
             return "double";
+        elif codeType == CodeType.JAVA:
+            return "Double";
 
 
     if etype == VariableType.BOOL:
@@ -199,7 +236,8 @@ def GetTypeToStr(etype:VariableType,codeType:CodeType):
             return "bool";
         elif codeType == CodeType.CPP:
             return "bool";
-
+        elif codeType == CodeType.JAVA:
+            return "Boolean";
 
     if etype == VariableType.ENUM:
        return "enum";

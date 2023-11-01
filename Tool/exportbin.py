@@ -32,6 +32,9 @@ def main():
     elif CodeContentType == CodeType.CS:
         templatePath =os.path.join(os.getcwd(),"template","csharp"); 
         templatePath = templatePath.replace("\\","/");
+    elif CodeContentType == CodeType.JAVA:
+        templatePath =os.path.join(os.getcwd(),"template","java"); 
+        templatePath = templatePath.replace("\\","/");
 
     print("curl path: " +  os.getcwd())
     print("xlxs path: " + CodePath)
@@ -54,6 +57,8 @@ def main():
             EnumUtils.ExportCpp(CodePath);
         elif CodeContentType == CodeType.CS:
             EnumUtils.ExportCS(CodePath);
+        elif CodeContentType == CodeType.JAVA:
+            EnumUtils.ExportJava(CodePath); 
     except:
         ColorHelper.printRed("__CommonEnum.xlsx is error");
         sys.exit();
@@ -71,6 +76,8 @@ def main():
             item.ExportCS(CodePath,templatePath);
         elif CodeContentType == CodeType.CPP:
             item.ExportCpp(CodePath,templatePath);
+        elif CodeContentType == CodeType.JAVA:
+            item.ExportJava(CodePath,templatePath);
 
     print("success");
 

@@ -165,10 +165,18 @@ class ConfigExcelData:
             if self.IsEnum():
                 return self.m_enum;
             return CommonType.GetTypeToStr(self.m_valueType,codeType);
+        elif codeType == CodeType.JAVA:
+            if self.IsEnum():
+                return self.m_enum;
+            return CommonType.GetTypeToStr(self.m_valueType,codeType);
 
 
     def GetVariable(self,codeType:CodeType):
         if codeType == CodeType.CS:
+            if self.IsEnum():
+                return "private "+self.m_enum+" m_" + self.m_valueName + ";"
+            return "private "+CommonType.GetTypeToStr(self.m_valueType,codeType)+" m_" + self.m_valueName + ";"
+        elif codeType == CodeType.JAVA:
             if self.IsEnum():
                 return "private "+self.m_enum+" m_" + self.m_valueName + ";"
             return "private "+CommonType.GetTypeToStr(self.m_valueType,codeType)+" m_" + self.m_valueName + ";"
@@ -182,6 +190,10 @@ class ConfigExcelData:
             if self.IsEnum():
                 return "public "+self.m_enum+" " + self.m_valueName + " => " + " m_" + self.m_valueName + ";"
             return "public "+CommonType.GetTypeToStr(self.m_valueType,codeType)+" " + self.m_valueName + " => " + " m_" + self.m_valueName + ";"
+        elif codeType == CodeType.JAVA:
+            if self.IsEnum():
+                return self.m_enum +" Get" + self.m_valueName + "(){ return m_" + self.m_valueName + ";};"
+            return CommonType.GetTypeToStr(self.m_valueType,codeType)+" Get" + self.m_valueName + "(){ return m_" + self.m_valueName + ";};"
         elif codeType == CodeType.CPP:
             if self.IsEnum():
                 return self.m_enum +" Get" + self.m_valueName + "(){ return m_" + self.m_valueName + ";};"

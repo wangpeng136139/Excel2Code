@@ -142,6 +142,70 @@ class ConfigExcelWork:
             f.write(cscontent) 
 
 
+
+
+
+    def ExportJava(self, path: str,templatePath:str):
+        path = os.path.join(path, self.__workName + ".java")
+        path = path.replace("\\","/");
+        workName = self.__workName
+        listKey = self.GetKeyList()
+
+        MainData:ConfigExcelData = None;
+        SecondData:ConfigExcelData = None
+        listKeyCount = len(listKey)
+        if listKeyCount > 0:
+            MainData = listKey[0]
+
+        if listKeyCount > 1:
+            SecondData = listKey[1]
+
+        try:
+            templatePath = os.path.join(templatePath,"Template"+str(listKeyCount) + ".java");
+            templatePath = templatePath.replace("\\","/");
+            f = open(templatePath,'r',encoding='utf-8')
+            cscontent = f.read();
+        except:
+            ColorHelper.printRed(path +" is error");
+            sys.exit();
+
+        valueList = self.GetVariable(CodeType.JAVA);
+        valueGetList = self.GetGetVariableRead(CodeType.JAVA);
+        markList = self.GetMarkList();
+        valueContent = "";
+        for i in range(len(valueList)):
+            value = valueList[i]
+            valueGet = valueGetList[i]
+            valueMark = markList[i];
+            valueContent = valueContent + "\t//" + valueMark + "\n";
+            valueContent = valueContent + "\t" + value + "\n";
+            valueContent = valueContent + "\t" + valueGet + "\n";
+
+        cscontent = cscontent.replace("TemplateClass",workName);
+        if MainData != None:
+            cscontent = cscontent.replace("FirstKeyType",MainData.GetVariableType(CodeType.JAVA));
+            cscontent = cscontent.replace("FirstKey",MainData.GetValueName());
+            
+        if SecondData != None:    
+            cscontent = cscontent.replace("SecondKeyType",SecondData.GetVariableType(CodeType.JAVA));
+            cscontent = cscontent.replace("SecondKey",SecondData.GetValueName());
+         
+        cscontent = cscontent.replace("ValueContent",valueContent);
+
+
+
+        valueContent = "";
+        valueReadList = self.GetTypeToRead(CodeType.JAVA);
+        for value in valueReadList:
+            valueContent = valueContent + "\t\t"+ value + "\n";
+
+        cscontent = cscontent.replace("ReadValueLoadContent",valueContent);   
+        with open(path, "w") as f:
+            f.write(cscontent) 
+
+
+
+
     def ExportCpp(self, path: str,templatePath:str):
 
         pathh = os.path.join(path, self.__workName + ".h")
