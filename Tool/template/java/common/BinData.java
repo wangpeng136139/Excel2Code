@@ -6,12 +6,10 @@ public class BinData
 {
 	private String[] commonstring = null;
 	private FileInputStream fileInputStream = null;
-	private DataInputStream dataInputStream = null;
 	public BinData(String path)
 	{
 		try {
 			fileInputStream = new FileInputStream(path);
-			dataInputStream = new DataInputStream(fileInputStream);
 			 // 执行文件操作
 		 } catch (FileNotFoundException e) {
 			 e.printStackTrace();
@@ -116,7 +114,10 @@ public class BinData
 	public boolean ReadBoolean()
 	{
 		try {
-			return dataInputStream.readBoolean();
+			int ch = fileInputStream.read();
+			if (ch < 0)
+				throw new EOFException();
+			return (ch != 0);
 			 // 执行文件操作
 		 } catch (Exception e) {
 			 e.printStackTrace();
@@ -124,10 +125,10 @@ public class BinData
 		return false;
 	}
 	
-	public char Readsbyte()
+	public int Readsbyte()
 	{
 	   try {
-			return dataInputStream.readChar();
+			return fileInputStream.read();
 			 // 执行文件操作
 		 } catch (Exception e) {
 			 e.printStackTrace();
@@ -156,7 +157,15 @@ public class BinData
 
 		try {
 			byte[] bytes = new byte[len];
-			dataInputStream.readFully(bytes);
+			if (len < 0)
+            	throw new IndexOutOfBoundsException();
+			int n = 0;
+			while (n < len) {
+				int count = fileInputStream.read(bytes, n, len - n);
+				if (count < 0)
+					throw new EOFException();
+				n += count;
+			}
 			String v = new String(bytes, "UTF-8");
 			return v;
 			 // 执行文件操作
@@ -170,7 +179,6 @@ public class BinData
 	{
 		try
 		{
-			dataInputStream.close();
 			fileInputStream.close();
 			commonstring = null;
 		}

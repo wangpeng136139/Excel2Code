@@ -1,6 +1,8 @@
 import os
 from typing import List
 import shutil;
+import fileinput;
+
 def DeleteDirFile(path):
     folder = ExistsDir(path)
     if not folder:
@@ -42,6 +44,19 @@ def CopyDirToDes(from_file,to_file):
             CopyDirToDes(from_file + '/' + f, to_file + '/' + f)  # 递归调用本函数
         else:
             shutil.copy(from_file + '/' + f, to_file + '/' + f)  # 拷贝文件
+
+def replace_text_in_directory(directory, old_text, new_text,ext):
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            file_path = os.path.join(root, file)
+            file_path = file_path.replace("\\","/");
+            if file_path.find(ext) < 0:
+                continue;
+            f = open(file_path,'r',encoding='utf-8')
+            content = f.read();
+            content = content.replace(old_text,new_text);
+            with open(file_path, "w",encoding='utf-8') as f:    
+                f.write(content) 
 
 
 def GetDirFileList(path) -> List:

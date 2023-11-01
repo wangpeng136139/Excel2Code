@@ -51,6 +51,9 @@ def main():
     
      #拷贝公共代码到对应目录
     Derictory.CopyDirToDes(templatePath + "/common", CodePath);
+    if CodeContentType == CodeType.JAVA:
+        Derictory.replace_text_in_directory(CodePath,"package TableConfig;","package " + JavaPackage + ";",".java");
+
     try:
         EnumPath = os.path.join(configPath, "__CommonEnum.xlsx");
         EnumPath = EnumPath.replace("\\", "/")
