@@ -13,7 +13,7 @@ pip install pyyaml
 basic configuration
 
 Path:
-
+```
   CodePath: ../Data/Code
   
   XlsxPath: ../Config
@@ -22,20 +22,41 @@ Path:
   
   CodeType: csharp   
 
+  JavaPackageName: TableConfig
+```
+
+
 ### Example
 csharp:
 ```
- DataBase.SetDataPath("E:/Bin");
+ DataBase.SetDataPath("E:/Bin/");
+ Test.Load();
+ Test1.Load();
+ Test2.Load();
+```
+java
+```
+ DataBase.SetDataPath("E:/Bin/");
  Test.Load();
  Test1.Load();
  Test2.Load();
 ```
 
+C++
+```
+DataBase::SetDataPath("E:/project/ExportExcel/Data/Bin/");
+Test::Load();
+Test1::Load();
+Test2::Load();
+```
 ### Run
 
 Use exceltool.sh
 
 
+### support languange:
+C++
 
+CSharp
 
-Currently only supports CSharp!!!!!
+Java
