@@ -7,3 +7,4 @@ Path:
   XlsxPath: ../Config
   BinPath: ../Data/Bin
   CodeType: 1
+  JavaPackage:TableConfig

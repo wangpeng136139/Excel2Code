@@ -145,7 +145,7 @@ class ConfigExcelWork:
 
 
 
-    def ExportJava(self, path: str,templatePath:str):
+    def ExportJava(self, path: str,templatePath:str,javaPackage:str):
         path = os.path.join(path, self.__workName + ".java")
         path = path.replace("\\","/");
         workName = self.__workName
@@ -200,6 +200,7 @@ class ConfigExcelWork:
             valueContent = valueContent + "\t\t"+ value + "\n";
 
         cscontent = cscontent.replace("ReadValueLoadContent",valueContent);   
+        cscontent = cscontent.replace("package TableConfig;","package "+javaPackage + ";");
         with open(path, "w") as f:
             f.write(cscontent) 
 

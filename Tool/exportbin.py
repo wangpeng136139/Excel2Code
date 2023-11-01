@@ -20,6 +20,7 @@ def main():
         BinPath =  yamlContent["Path"]["BinPath"];
         CodePath =  yamlContent["Path"]["CodePath"];
         CodeContentInt =  int(yamlContent["Path"]["CodeType"]);
+        JavaPackage = yamlContent["Path"]["JavaPackage"];
     except:
         ColorHelper.printRed(yamlPath + " is error");
         sys.exit();
@@ -58,7 +59,7 @@ def main():
         elif CodeContentType == CodeType.CS:
             EnumUtils.ExportCS(CodePath);
         elif CodeContentType == CodeType.JAVA:
-            EnumUtils.ExportJava(CodePath); 
+            EnumUtils.ExportJava(CodePath,JavaPackage); 
     except:
         ColorHelper.printRed("__CommonEnum.xlsx is error");
         sys.exit();
