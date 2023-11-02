@@ -23,10 +23,16 @@ class ConfigExcelRowTitle:
     def GetVariableType(self,codeType:CodeType):
         return self.__datalist[index].GetVariableType(codeType);
 
-    def GetVariable(self,codeType:CodeType):
+    def GetValueNameList(self):
         csList = []
         for item in self.__datalist:
-            csList.append(item.GetVariable(codeType))
+            csList.append(item.GetValueName());
+        return csList
+
+    def GetClassVariable(self,codeType:CodeType):
+        csList = []
+        for item in self.__datalist:
+            csList.append(item.GetClassVariable(codeType))
         return csList
 
 
@@ -111,6 +117,12 @@ class ConfigExcelRow:
         for cell in self.__datalist:
             cellList.append(cell.GetBytes())
         return cellList
+
+    def GetVariableTypeEnum(self,index):
+        return self.__datalist[index].GetVariableTypeEnum()
+
+    def GetValue(self, index) -> list:
+        return self.__datalist[index].GetValue()
 
     def GetCellBin(self, index) -> list:
         return self.__datalist[index].GetBytes()

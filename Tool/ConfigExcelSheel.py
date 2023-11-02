@@ -45,8 +45,8 @@ class ConfigExcelSheel:
         return self.__rowTitle.GetMarkList()
 
 
-    def GetVariable(self,codeType:CodeType) -> List:
-        return self.__rowTitle.GetVariable(codeType)
+    def GetClassVariable(self,codeType:CodeType) -> List:
+        return self.__rowTitle.GetClassVariable(codeType)
 
     def GetTypeToRead(self,codeType:CodeType) -> List:
         return self.__rowTitle.GetTypeToRead(codeType)
@@ -55,6 +55,37 @@ class ConfigExcelSheel:
 
     def GetMainKey(self) -> List:
         return self.__rowTitle.GetMainKey()
+
+
+    def GetValueDic(self)->dict:
+        valueDic = {};
+        list = self.__listrow
+        for index in range(len(list)):
+            row = list[index]
+            for colIndex in range(self.__colcount):
+                name = self.__rowTitle.GetValueName(colIndex);
+                if False == (name in valueDic.keys()):
+                    valueDic[name] = [];
+                valueDic[name].append(row.GetValue(colIndex))
+        return valueDic;
+
+    #Lua 需要特殊处理
+    def GetValueLuaDic(self)->dict:
+        valueDic = {};
+        list = self.__listrow
+        for index in range(len(list)):
+            row = list[index]
+            for colIndex in range(self.__colcount):
+                name = self.__rowTitle.GetValueName(colIndex);
+                if False == (name in valueDic.keys()):
+                    valueDic[name] = [];
+                valueType = row.GetVariableTypeEnum(colIndex)    
+                if valueType == VariableType.STRING:
+                    valueDic[name].append("\""+row.GetValue(colIndex)+"\"");
+                else:
+                    valueDic[name].append(row.GetValue(colIndex))
+        return valueDic;
+
 
     def GetBinList(self) -> List:
         binList: List = []

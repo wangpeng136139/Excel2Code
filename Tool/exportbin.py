@@ -37,6 +37,9 @@ def main():
     elif CodeContentType == CodeType.JAVA:
         templatePath =os.path.join(os.getcwd(),"template","java"); 
         templatePath = templatePath.replace("\\","/");
+    elif CodeContentType == CodeType.LUA:
+        templatePath =os.path.join(os.getcwd(),"template","lua"); 
+        templatePath = templatePath.replace("\\","/");
 
     print("curl path: " +  os.getcwd())
     print("xlxs path: " + CodePath)
@@ -49,6 +52,7 @@ def main():
     Derictory.DeleteDirFile(BinPath)
     Derictory.DeleteDirFile(CodePath)
     
+    CodeContentType = CodeType.LUA;
      #拷贝公共代码到对应目录
     Derictory.CopyDirToDes(templatePath + "/common", CodePath);
     if CodeContentType == CodeType.JAVA:
@@ -76,13 +80,17 @@ def main():
         if enumFind > -1 or workpath.find(".xlsx") < 0:
             continue
         item = ConfigExcelWork(workpath)
-        item.ExportBin(BinPath) 
+        if CodeContentType != CodeType.LUA:
+            item.ExportBin(BinPath)
+
         if CodeContentType == CodeType.CS:
             item.ExportCS(CodePath,templatePath);
         elif CodeContentType == CodeType.CPP:
             item.ExportCpp(CodePath,templatePath);
         elif CodeContentType == CodeType.JAVA:
             item.ExportJava(CodePath,templatePath,JavaPackage);
+        elif CodeContentType == CodeType.LUA:
+            item.ExportLua(CodePath,templatePath);
 
     print("success");
 

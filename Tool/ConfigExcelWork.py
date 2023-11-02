@@ -62,6 +62,15 @@ class ConfigExcelWork:
     def GetKeyList(self) -> List:
         return self.__sheetList[0].GetMainKey()
 
+    def GetValueNameList(self) -> List:
+        return self.__sheetList[0].GetValueNameList();
+
+    def GetValueDic(self)->dict:
+        return self.__sheetList[0].GetValueDic();
+
+    def GetValueLuaDic(self)->dict:
+        return self.__sheetList[0].GetValueLuaDic();
+
     def GetGetVariableRead(self,codeType:CodeType) -> List:
         return self.__sheetList[0].GetGetVariableRead(codeType);
 
@@ -71,8 +80,8 @@ class ConfigExcelWork:
     def GetVariableType(self,codeType:CodeType):
         return self.__sheetList[0].GetVariableType(codeType);
 
-    def GetVariable(self,codeType:CodeType) -> List:
-        return self.__sheetList[0].GetVariable(codeType)
+    def GetClassVariable(self,codeType:CodeType) -> List:
+        return self.__sheetList[0].GetClassVariable(codeType)
 
     def GetTypeToRead(self,codeType:CodeType) -> List:
         return self.__sheetList[0].GetTypeToRead(codeType)
@@ -107,7 +116,7 @@ class ConfigExcelWork:
             ColorHelper.printRed(path +" is error");
             sys.exit();
 
-        valueList = self.GetVariable(CodeType.CS);
+        valueList = self.GetClassVariable(CodeType.CS);
         valueGetList = self.GetGetVariableRead(CodeType.CS);
         markList = self.GetMarkList();
         valueContent = "";
@@ -169,7 +178,7 @@ class ConfigExcelWork:
             ColorHelper.printRed(path +" is error");
             sys.exit();
 
-        valueList = self.GetVariable(CodeType.JAVA);
+        valueList = self.GetClassVariable(CodeType.JAVA);
         valueGetList = self.GetGetVariableRead(CodeType.JAVA);
         markList = self.GetMarkList();
         valueContent = "";
@@ -240,7 +249,7 @@ class ConfigExcelWork:
             ColorHelper.printRed(pathcpp +" is error");
             sys.exit();
 
-        valueList = self.GetVariable(CodeType.CPP);
+        valueList = self.GetClassVariable(CodeType.CPP);
         valueGetList = self.GetGetVariableRead(CodeType.CPP);
         markList = self.GetMarkList();
         valueContent = "";
@@ -288,5 +297,33 @@ class ConfigExcelWork:
 
         
         
+    def ExportLua(self, path: str,templatePath:str):
+        path = os.path.join(path, self.__workName + ".lua")
+        path = path.replace("\\","/");
+        valueDic = self.GetValueLuaDic();
+        listDic = {};
+        for k,v in valueDic.items():
+            name = k;
+            list = v;
+            for i in range(0,len(list)):
+                value = (name ,list[0]);
+                if False == (i in listDic.keys()):
+                    listDic[i] = [];
+                listDic[i].append(value);
 
-    
+        
+        content = Content();
+        content.WriteLine("require(\"CommonLua\")");
+        content.WriteLine("local " + self.__workName + "=readOnly")
+        content.StartBlock();
+        for k,v in listDic.items():
+            content.WriteLine("["+str(k)+"]=");
+            content.StartBlock();
+            listRow = v;
+            for i in range(0,len(listRow)):
+                value = listRow[i];
+                content.WriteLine(str(value[0]) +"="+ str(value[1]) + ",");
+            content.EndBlock();
+            content.WriteLine(",");
+        content.EndBlock();    
+        content.WriteFile(path);

@@ -77,12 +77,16 @@ class ConfigExcelData:
         
         return int(strValue)
 
+    def GetVariableTypeEnum(self):
+        return  self.m_valueType;
 
     def TypeIsInt(self):
         return VariableType.INT16 == self.m_valueType or VariableType.INT32 == self.m_valueType  or VariableType.INT64 == self.m_valueType or VariableType.UINT16 == self.m_valueType or VariableType.UINT32 == self.m_valueType  or VariableType.UINT64 == self.m_valueType;
     
     def TypeIsFloat(self):
         return VariableType.FLOAT == self.m_valueType or VariableType.DOUBLE == self.m_valueType;
+
+
 
     def TypeToValue(self):
         value = str(self.m_value);
@@ -151,6 +155,7 @@ class ConfigExcelData:
     def GetValue(self):
         return self.m_value
 
+
     def IsEnum(self) -> bool:
         if self.m_typeStr.find("enum") > -1:
             return True
@@ -171,7 +176,7 @@ class ConfigExcelData:
             return CommonType.GetTypeToStr(self.m_valueType,codeType);
 
 
-    def GetVariable(self,codeType:CodeType):
+    def GetClassVariable(self,codeType:CodeType):
         if codeType == CodeType.CS:
             if self.IsEnum():
                 return "private "+self.m_enum+" m_" + self.m_valueName + ";"

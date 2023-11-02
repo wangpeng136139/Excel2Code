@@ -15,7 +15,7 @@ namespace TableConfig
 		{
 		    var filePath = 	System.IO.Path.Combine(DefaultFolder ,fileName);
 			filePath = filePath.Replace("\\","/");
-			return OpenBin(filePath);
+			return OpenBin(filePath);V
 		}
 
 		public static BinData OpenBin(string fullPath)
