@@ -8,6 +8,12 @@ pip install xlrd==1.2.0
 
 pip install pyyaml
 
+### Excel
+The first line in Excel is the variable name
+
+The second line in Excel is a comment
+
+The third line in Excel is the variable type
 
 ### __Path.yaml    
 basic configuration
