@@ -75,6 +75,5 @@ Java
 Lua
 
 
-![image](https://github.com/wangpeng136139/Excel2Code/assets/29979682/23267a84-d8f9-4175-990a-04cf13dc7a83)
 
 
