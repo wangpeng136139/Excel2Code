@@ -20,13 +20,18 @@ basic configuration
 
 Path:
 ```
+#    CS = 0,
+#    CPP = 1,
+#    JAVA = 2,
+#    LUA = 3,
+
   CodePath: ../Data/Code
   
   XlsxPath: ../Config
   
   BinPath: ../Data/Bin
   
-  CodeType: csharp   
+  CodeType: 1   
 
   JavaPackageName: TableConfig
 ```
@@ -66,3 +71,9 @@ C++
 CSharp
 
 Java
+
+Lua
+
+
+
+
