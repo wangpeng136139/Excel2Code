@@ -2,7 +2,7 @@
 
 std::vector<TemplateClass*>* TemplateClass::m_Datas = NULL;
 std::map<FirstKeyType, std::vector<TemplateClass*>*>* TemplateClass::m_DatasDic = NULL;
-std::map<std::pair<int, double>, TemplateClass*>* TemplateClass::m_DatasDicDic = NULL;
+std::map<std::pair<FirstKeyType, SecondKeyType>, TemplateClass*>* TemplateClass::m_DatasDicDic = NULL;
 
 int TemplateClass::GetCount()
 {
@@ -42,7 +42,7 @@ TemplateClass* TemplateClass::Get(FirstKeyType FirstKey,SecondKeyType SecondKey)
 		return NULL;
 	}
 
-	std::pair<int, int> keyPair;
+	std::pair<FirstKeyType, SecondKeyType>> keyPair;
 	keyPair.first = FirstKey;
 	keyPair.second = SecondKey;
 	auto it = m_DatasDicDic->find(keyPair);
@@ -71,8 +71,8 @@ void TemplateClass::Load()
 		{
 			int count = bin->ReadInt32();
 			m_Datas = new std::vector<Test2*>();
-			m_DatasDic = new std::map<int, std::vector<Test2*>*>();
-			m_DatasDicDic = new std::map<std::pair<int, double>, Test2*>();
+			m_DatasDic = new std::map<FirstKeyType, std::vector<Test2*>*>();
+			m_DatasDicDic = new std::map<std::pair<FirstKeyType, SecondKeyType>>, Test2*>();
 			for (int i = 0; i < count; ++i)
 			{
 				TemplateClass * data = new TemplateClass();
@@ -89,7 +89,7 @@ void TemplateClass::Load()
 					it->second->push_back(data);
 				}
 				
-				std::pair<int, int> keyPair;
+				std::pair<FirstKeyType, SecondKeyType>> keyPair;
 				keyPair.first = data->GetFirstKey();
 				keyPair.second = data->GetSecondKey();
 				auto itDic = m_DatasDicDic->find(keyPair);

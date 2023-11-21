@@ -54,7 +54,7 @@ def ExportCpp(path):
     cspath = path + "/CommonEnum.h"
     content = Content()
     for k, v in __enumDic.items():
-        content.WriteLine("enum "+k)
+        content.WriteLine("enum class "+k)
         content.StartBlock()
         for item in v:
             content.WriteLine("//" + item.GetDes())
