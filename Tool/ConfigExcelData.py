@@ -93,7 +93,7 @@ class ConfigExcelData:
                 value = False
             else:
                 value = bool(value)
-        elif type == "long":
+        elif type == "long" or type == "int64_t" or type == "uint64_t":
             value = self.StrToInt(value)
         elif type == "short":
             value = self.StrToInt(value)
